@@ -1,0 +1,146 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+<link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<style>
+body {  
+	padding-top: 65px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+select.form-control {
+  width: 200px;
+}
+
+</style>
+  </head>
+  <body>
+<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+    <!-- Export -->
+<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+<script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF/jspdf.min.js"></script>
+<script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
+
+<script>
+  init({
+    title: 'Awesome Icons',
+    desc: '',
+    links: ['bootstrap-table.min.css'],
+    scripts: ['bootstrap-table.min.js']
+  })
+</script>
+
+<!-- Toolbar -->
+<div class="jumbotron">
+  <h5>Awesome Icons</h5>
+  <p class="lead">Review data from Awesome Icons.</p>
+    <pre id="data">
+    </pre>
+</div>
+
+<div id="toolbar">
+  <button id="button" class="btn btn-primary btn-sm">Get Data</button>
+</div>
+
+<div class="toolbar">
+  <select class="form-control" id="locale">
+  </select>
+</div>
+
+<table
+  id="table"
+  data-toggle="table"
+  data-height="600"
+  data-pagination="true"
+  data-toolbar="#toolbar"
+  data-click-to-select="true"
+  data-buttons-class="btn btn-outline-success btn-sm"
+  data-filter-control="true"
+  data-show-refresh="true"
+  data-show-toggle="true"
+  data-detail-view="true"
+  data-detail-view-icon="false"
+  data-detail-view-by-click="true"
+  data-detail-formatter="detailFormatter"
+  data-show-fullscreen="true"
+  data-show-export="true"
+  >
+  <thead>
+    <tr>
+     <th data-field="checkbox" data-checkbox="true"></th>
+     <th data-field="icon" data-formatter="iconFormatter">Icon</th>
+      <th data-field="name" class="primary">Name</th>
+      <th data-field="label">Label</th>
+      <th data-field="unicode" data-escape="true" class="mb-0">Unicode</th>
+      <th data-field="terms" data-class="mb-0" data-filter-control="select">Terms</th>
+    </tr>
+  </thead>
+</table>
+
+<script>
+  var $table = $('#table')
+  var $button = $('#button')
+
+function getIcons(icons) {
+var styles = {'solid':'fas','regular':'far','brands':'fab'};
+var values = Object.entries(icons).reduce((acc, [fk, fv], i) => (acc[i] = {name: fk, label: fv.label, styles: fv.styles, unicode: fv.unicode, prefix: styles[fv.styles[0]], terms: fv.search.terms}, acc), []); return values;
+}
+  
+function onlyUnique(value, index, self) {
+return self.indexOf(value) === index;
+}
+
+ var ajaxReq = $.ajax('https://raw.githubusercontent.com/mhiphip/Font-Awesome/master/metadata/icons.json',  {dataType: 'json'});
+ 
+ajaxReq.success(function (data, status) {
+data = getIcons(data);
+$('#data').text(JSON.stringify(data));
+ 
+var options = data.map(vl => vl.terms).flat().filter(onlyUnique).map(tr => `<option value='${tr}'>${tr}</option>`).join('\n');
+
+ $('#locale').html(options);
+$table.bootstrapTable({data: data});
+ })
+
+<!-- Format -->
+function iconFormatter(index, row) {
+var prefix = row.prefix;
+var name = row.name;
+ return `<span style='font-size: 25px'><i class='${prefix} fa-${name} fa-2x'></i></span>`;
+}
+
+function detailFormatter(index, row) {
+    var html = []
+    $.each(row, function (key, value) {
+      html.push('<p><b>' + key + ':</b> ' + value + '</p>')
+    }) 
+    return html.join('')
+  }
+
+ <!-- Output -->
+    $(function() {
+	 $button.click(function () {
+	 var data = $table.bootstrapTable('getAllSelections');
+	 document.load(JSON.stringify(data));
+	})
+  })
+</script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>
