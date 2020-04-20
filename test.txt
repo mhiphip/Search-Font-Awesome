@@ -1,0 +1,27 @@
+// create template to loop over drafts
+
+require("mustache.js");
+
+var content = `
+<i class='fab fa-apple-pay'></i>
+<i class='fas fa-apple-alt'></i>
+<i class='fab fa-apple'></i>
+<i class='fab fa-apper'></i>
+<i class='fab fa-app-store-ios'></i>
+<i class='fab fa-app-store'></i>
+<i class='fab fa-cc-apple-pay'></i>
+<i class='fab fa-sketch'></i>
+<i class='fab fa-invision'></i>
+<i class='fab fa-intercom'></i>
+`;
+
+var temp = `<div style='font-size: 24px;'>
+{{#names}}
+<i class='{{.}}'></i>
+{{/names}}
+`
+
+let re =  /class=\'(.*?)\'/mgi;
+let ms = FindMatches(re, content, 1);
+var output = Mustache.render(temp, {names: ms});
+alert(JSON.stringify(output));
