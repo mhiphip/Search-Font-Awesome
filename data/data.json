@@ -10,8 +10,6 @@
       "regular": "far",
       "brands": "fab"
     },
-    "getIcons": function getIcons(icons) {\nvar styles = this.styles\nvar values = Object.entries(icons).reduce((acc, [fk, fv], i) => (acc[i] = {name: fk, label: fv.label, styles: fv.styles, unicode: fv.unicode, prefix: styles[fv.styles[0]], terms: fv.search.terms}, acc), []); return values;\n}
-  },
   "html": {
     "scripts": {
       "all": "https://use.fontawesome.com/releases/v5.13.0/js/all.js"
