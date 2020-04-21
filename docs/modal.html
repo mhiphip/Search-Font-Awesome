@@ -12,8 +12,8 @@
         {{&body}}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="SaveData" data-dismiss="modal">Save</button>
+        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="SaveData" data-dismiss="modal">Save</button>
       </div>
     </div>
   </div>
@@ -24,6 +24,6 @@
    var selects = $table.bootstrapTable('getAllSelections');
    $container.load('result.html', function(html) {
       $('#result').text(JSON.stringify(selects));
-   }).hide().fadeIn('slow');
- })
+   }).hide().fadeIn('200');
+        })
 </script>
