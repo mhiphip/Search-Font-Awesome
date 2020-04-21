@@ -21,8 +21,8 @@
 
 <script>
    $('#SaveData').click(function () {
-   var res = $table.bootstrapTable('getOptions').url + '?' + $.param(params)
-   var arr = $table.bootstrapTable('getSelections');
-   document.write(JSON.stringify(res));
+   var res =  $table.bootstrapTable('getOptions')
+   var arr = $table.bootstrapTable('getSelections')
+   document.write(JSON.stringify(res))
    })
 </script>
