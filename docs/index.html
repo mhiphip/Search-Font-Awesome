@@ -31,30 +31,24 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <script src="data/functions.js"></script> 
 
-
+<div id='container'>
 <!-- Toolbar -->
-
-<div class="jumbotron" align="center">
+<div class="page-header text-center">
 <i class='fab fa-font-awesome fa-2x'></i>
   <h4>Awesome Icons</h4>
   <p class="lead">Awesome Icons collections</p>
   <hr class="my-4">
   <div id="modal">
-  
-  </div>
-  <div id="selects">
   </div>
 </div>
 
-<div id="toolbar">
-<button id="select" type="button" class="btn btn-danger" disabled>Select <span id=‘select_ln’ class="badge badge-light"></span></button>
+<div class="toolbar">
+<button id="select" type="button" class="btn btn-danger" disabled>Select <span id="select_ln" class="badge badge-light"></span></button>
 </div>
-
 <table
   id="table"
   data-toggle="table"
   data-pagination="true"
-  data-height="500"
   data-toolbar="#toolbar"
   data-events="inputEvents"
   data-filter-control="true"
@@ -66,7 +60,7 @@ body {
   data-show-toggle="true"
   data-show-fullscreen="true"
   >
-  <thead>
+  <thead class="thead-light">
     <tr>
       <th data-field="select" data-checkbox="true">Select</th>
      <th data-field="icon" data-formatter="iconFormatter" data-align="center">Icon</th>
@@ -77,9 +71,8 @@ body {
   </thead>
 </table>
 <script>
+var $container = $('#container')
 var $table = $('#table')
-
-var $selectArr = []
 var $select = $('#select')
 var $select_ln = $('#select_ln')
 var $selects = $('#selects')
@@ -103,31 +96,24 @@ var terms = row.terms.map(term => `<span class="badge badge-secondary disable">$
 return terms;
 }
 
-function detailFormatter(index, row) {
-var html = $.map(row, function (key, value) {
-return `<p>${value}: ${key}</p>`
-}).join('');
-return html;
-}
-
 // Events
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
     var selects =
     $table.bootstrapTable('getAllSelections')
     $select_ln.text(selects.length)
-    $select.prop('disabled', !selects.length)
-     $select_ln.text(selects.length, !selects.length)
+    $select.prop('disabled', !selects.length);
+    (selects.length > 0) ? $select_ln.text(selects.length) :    $select_ln.empty();
     })
    
    $select.click(function () {
-     $modal.load('alert.html', function(html) {
-     var html = Mustache.render(html, {body:  $selects.text()});
+     $modal.load('modal.html', function(html) {
+     var html = Mustache.render(html, {body:  getSelect()});
      $modal.html(html);
      $('#selects').modal('show');
      })
    })
 </script>
-
+</div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
