@@ -43,7 +43,6 @@ body {
   <h4><i class='fab fa-font-awesome fa-fw'></i>Awesome Icons</h4>
   <p class="lead">Awesome Icons collections</p>
   <hr class="my-4">
-  <a href="data/icons.json">link text</a>
   <div id="modal">
   
   </div>
@@ -93,7 +92,6 @@ var $modal = $('#modal')
 
 $.get('data/icons.json', 
 function (data) { 
-alert(JSON.stringify(data))
 var data = getIcons(data)
 $table.bootstrapTable('load', data)
 })
