@@ -23,7 +23,7 @@
  $('#SaveData').click(function () {
    var selects = $table.bootstrapTable('getAllSelections');
    $container.load('result.html', function(html) {
-      $('#result').text(JSON.stringify(selects));
+   $('#result').text(JSON.stringify(selects));
    }).hide().fadeIn('200');
-        })
+   })
 </script>
