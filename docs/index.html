@@ -91,7 +91,9 @@ var $select = $('#select')
 var $selects = $('#selects')
 var $modal = $('#modal')
 
-$.get('/data/icons.json', 
+$selects.load('data/icons.json')
+
+$.get('data/icons.json', 
 function (data) { 
 var data = getIcons(data)
 $table.bootstrapTable('load', data)
