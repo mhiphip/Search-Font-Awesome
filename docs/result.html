@@ -21,6 +21,12 @@ blockquote {
   </p>
 <blockquote class="card border-primary mb-3" id='result'>
 </blockquote>
-    <a class="btn btn-success" href=window.close() role="button">Close</a>
+<button type="button" class="btn btn-success" id="Success">Close</button>
 </div>
 </div>
+
+<script>
+$('#Success').on('click', function () {
+window.close();
+});
+</script>
