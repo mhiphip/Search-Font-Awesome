@@ -21,6 +21,12 @@
 </div>
 
 <script>
+$('#Color').click(function() {
+$container.load('color.html',function(html) {
+  alert(html);
+  }).hide.show();
+})
+
 $('#Save').click(function() {
 var selects = $table.bootstrapTable('getAllSelections'); 
 $container.load('result.html',function(html) {
