@@ -21,9 +21,9 @@ return text;
 
 function CreateDivs(data) {
 var temp = {
-  "menu": "  <li class=\"nav-item\">\n    <a class=\"nav-link disabled\" data-toggle=\"tab\" href=\"#{{&name}}\">{{&name}}</a>\n  </li>",
-  "tab": "<div class=\"tab-pane fade\" id=\"{{&name}}\"> {{&name}}</div>"
-};
+  "menu": "  <a class=\"nav-item nav-link\" id=\"nav-{{&name}}-tab\" data-toggle=\"tab\" href=\"#nav-{{&name}}\" role=\"tab\" aria-controls=\"nav-{{&name}}\" aria-selected=\"false\"> {{&name}} </a>",
+  "tab": "<div class=\"tab-pane fade\" id=\"{{&name}}\" role=\"tabpanel\" aria-labelledby=\"{{&name}}-tab\">\n{{&html}}\n</div>"
+}
 temp.menu = Mustache.render(temp.menu, data);
 temp.tab = Mustache.render(temp.tab, data);
 return temp;
