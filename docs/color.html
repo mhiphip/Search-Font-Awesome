@@ -1,0 +1,19 @@
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+
+<div class="demo">
+<h5>Color Picker</h5>
+<input id="demo-input" type="text" value="rgb(255, 128, 0)" />
+  </div>
+  <script src="https//code.jquery.com/jquery-3.4.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/js/bootstrap-colorpicker.min.js"></script>
+  <script>
+    $(function () {
+      // Basic instantiation:
+      $('#demo-input').colorpicker();
+      
+      // Example using an event, to change the color of the #demo div background:
+      $('#demo-input').on('colorpickerChange', function(event) {
+        $('#demo').css('background-color', event.color.toString());
+      });
+    });
+  </script>
