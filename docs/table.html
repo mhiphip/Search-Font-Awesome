@@ -1,0 +1,82 @@
+<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
+
+<!-- modal -->
+  <div id="modal">
+  </div>
+
+<!-- toolbar -->
+<div class="toolbar">
+<button id="select" type="button" class="btn btn-danger btn-lg" disabled>Select <span id="select_ln" class="badge badge-light"></span></button>
+</div>
+
+<!-- Table -->
+<table
+  id="table"
+  data-toggle="table"
+  data-pagination="true"
+  data-toolbar="#toolbar"
+  data-events="inputEvents"
+  data-filter-control="true"
+  data-search="true"
+  data-stickyHeader="true"
+  data-click-to-select="true"
+  data-buttons-class="btn btn-outline-primary"
+  data-show-refresh="true"
+  data-show-toggle="true"
+  data-show-fullscreen="true"
+  >
+  <thead class="thead-light">
+    <tr>
+      <th data-field="select" data-checkbox="true">Select</th>
+     <th data-field="icon" data-formatter="iconFormatter" data-align="center">Icon</th>
+     <th data-field="label">Label</th>
+     <th data-field="unicode">Unicode</th>
+     <th data-field="terms" data-formatter="termsFormatter" data-width="60">Terms</th>
+    </tr>
+  </thead>
+</table>
+
+<script>
+var $section = $('#section')
+var $table = $('#table')
+var $select = $('#select')
+var $select_ln = $('#select_ln')
+var $selects = $('#selects')
+var $modal = $('#modal')
+
+$.get('data/icons.json', function (data) { 
+var data = getIcons(data)
+$table.bootstrapTable('load', data)
+})
+
+// Format
+ function iconFormatter(index, row) {
+ return `<span style='font-size: 20' class="badge badge-light">
+ <i class='${row.prefix} fa-${row.name} fa-fw fa-3x'></i></span><br>
+  <small>${row.name}</small>
+ `;
+}
+
+function termsFormatter(index, row) {
+var terms = row.terms.map(term => `<span class="badge badge-secondary disable">${term}</span>`).join(' ')
+return terms;
+}
+
+// Events
+    $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+    var selects =
+    $table.bootstrapTable('getAllSelections')
+    $select.prop('disabled', !selects.length);
+    (selects.length > 0) ? $select_ln.text(selects.length) :    $select_ln.empty();
+    })
+   
+   $select.click(function () {
+     $modal.load('modal.html', function(html) {
+     var html = Mustache.render(html, {body:  getSelect()});
+     $modal.html(html);
+     $('#selects').modal('show');
+     })
+   })
+</script>

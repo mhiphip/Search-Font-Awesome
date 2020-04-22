@@ -17,3 +17,9 @@ var temp = {
 var text = temp.text() + temp.names.join(', ');
 return text;
 }
+
+function CreateDivs(data) {
+var temp = "<div id='{{id}}'>\n{{html}}\n</div>";
+var res = Mustache.render(temp, data);
+return res;
+}
