@@ -20,12 +20,11 @@
 </div>
 
 <script>
-$('#Save').click(function () {
+$('#Save').click(function() {
 var selects = $table.bootstrapTable('getAllSelections'); 
-
-$('#container').load('result.html',
-function(html) {
-$('#object').text(JSON.stringify(selects));
-});
-}).hide().show();
+  $container.load('result.html',function(html) {
+  var sel = JSON.stringify(selects);
+  $('#object').text(sel);
+  })
+})
 </script>
