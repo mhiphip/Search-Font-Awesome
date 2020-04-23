@@ -22,9 +22,10 @@
 
 <script>
 $('#Color').click(function() {
-$container.load('color.html',function(html) {
-  alert(html);
-  }).hide.show();
+$container.load('color.html',
+function(html) {
+  $('#cp1').colorpicker();
+ }).show('slow');
 })
 
 $('#Save').click(function() {
@@ -32,6 +33,6 @@ var selects = $table.bootstrapTable('getAllSelections');
 $container.load('result.html',function(html) {
   var sel = JSON.stringify(selects);
   $('#result').text(sel);
-  }).hide.show();
+  }).show('slow');
 })
 </script>
