@@ -45,45 +45,19 @@
   
 <!-- container -->
 <div class="container" id='container'>
-<h4>Icons</h4>
-<p>Icon list to search from.</p>
 
-<ul id="mlist" class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#home">Home</a>
-  </li>
-</ul>
-
-<div id="tabs" class="tab-content">
-  <div class="tab-pane fade active show" id="home">
-    <p>Home</p>
-  </div>
 </div>
 
 <script>
-var $pages = {"pages":[{"name":"Color","description":"Color picker.","id":"color","link":"color.html"},{"name":"Result","id":"result","link":"result.html"}]};
-var $mlist = $('#mlist');
-var $tabs = $('#tabs');
-
-var divs = CreateDivs($pages);
-  $mlist.append(divs.list);
-  $tabs.append(divs.tab);
-  
-var arr = $pages.pages;
-arr.forEach(page => {
-  $(`#${page.id}`).load(page.link, 
-  function(html) {
-  console.log(html);
-  });
+var $container = $('#container');
+$container.load('table.html', function (html) {
 });
-console.log($('#color').html());
 </script>
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJo+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr  .net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   </body>
 </html>
