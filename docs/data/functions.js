@@ -21,10 +21,10 @@ return text;
 
 function CreateDivs(data) {
 var temp = {
-  "menu": "  <a class=\"nav-item nav-link\" id=\"nav-{{&name}}-tab\" data-toggle=\"tab\" href=\"#nav-{{&name}}\" role=\"tab\" aria-controls=\"nav-{{&name}}\" aria-selected=\"false\"> {{&name}} </a>",
-  "tab": "<div class=\"tab-pane fade\" id=\"{{&name}}\" role=\"tabpanel\" aria-labelledby=\"{{&name}}-tab\">\n{{&html}}\n</div>"
-}
-temp.menu = Mustache.render(temp.menu, data);
+  "list": "{{#pages}}\n<li class=\"nav-item\"><a class=\"nav-link\" data-toggle=\"tab\" href=\"#{{&id}}\">{{&name}}</a></li>\n{{/pages}}",
+  "tab": "{{#pages}}<div class=\"tab-pane fade\" id=\"{{&id}}\"></div>{{/pages}}"
+}         
+temp.list = Mustache.render(temp.list, data);
 temp.tab = Mustache.render(temp.tab, data);
 return temp;
 }

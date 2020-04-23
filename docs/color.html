@@ -1,10 +1,27 @@
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/css/bootstrap-colorpicker.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/css/bootstrap-colorpicker.css" rel="stylesheet">
 
-  <script src="https://unpkg.com/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/js/bootstrap-colorpicker.min.js"></script>
-<div>
-<input id="cp1" type="text" class="form-control input-lg" value=""/>
+<!-- color picker -->
+<div id="cp1" class="input-group" title="Using input value">
+  <input type="text" class="form-control input-lg" value="#DD0F20FF"/>
+  <span class="input-group-append">
+  <span class="input-group-text colorpicker-input-addon"><i></i></span>
+  </span>
 </div>
+</br>
+<div id="cp2" class="input-group" data-color="rgb(241, 138, 49)"
+     title="Using data-color attribute in the colorpicker element">
+  <input type="text" class="form-control input-lg"/>
+  <span class="input-group-append">
+    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+  </span>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script src="https://unpkg.com/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/js/bootstrap-colorpicker.min.js"></script>
 <script>
-$('#cp1').colorpicker();
+$(function() {
+    $('#cp1').colorpicker();
+    $('#cp2').colorpicker({"color": "#16813D"});
+});
 </script>
