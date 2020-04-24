@@ -8,10 +8,12 @@
 <div id="modal">
 </div>
 
+<hr class="my-2">
+  
 <!-- table toolbar -->
 <div id="toolbar">
 </div>
-
+  
 <!-- Table -->
 <table
   id="table"
@@ -19,9 +21,11 @@
   data-pagination="true"
   data-auto-refresh="true"
   data-page-size="25"
-  data-pagination-v-align="bottom"
+  data-pagination-v-align="top"
   data-events="inputEvents"
-  data-toolbar-align="left"
+  data-buttons-align="left"
+  data-search-align="left"
+  data-toolbar-align="right"
   data-toolbar="#toolbar"
   data-buttons-class="btn btn-outline-primary"
   data-search="true"
@@ -50,16 +54,10 @@ var $select_ln = $('#select_ln')
 var $selects = $('#selects')
 var $modal = $('#modal')
 
-$(function() {
-  $.get('data/icons.json', function (data) {
+$.get('data/icons.json', function (data) {
   // table
   var data = getIcons(data);
   $table.bootstrapTable('load', data);
-  
-  // filter
-  var terms = _.uniq(_.pluck(data, 'terms').flat()).sort((a,b) => a > b);
-  GetFilter(terms);
-  });
 });
 
 // 
@@ -94,13 +92,6 @@ $select.prop('disabled', !selects.length);
     (selects.length > 0) ? $select_ln.text(selects.length) :    $select_ln.empty();
 })
 
-function GetTerms(data) {
-  $.get('data/template.json',
-  function (temp) {
-  var options = Mustache.render(temp.select, {id:'tfilter', options: terms});
-  alert(options);
-  });
-}
 
 // modal
 $select.click(function () {
