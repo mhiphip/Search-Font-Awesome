@@ -1,19 +1,17 @@
-<!-- modal -->
-  <div id="modal">
-  </div>
-  
-<!-- container -->
-<div class="container" id='container'>
-<h4>Icons</h4>
-<p>Icon list to search from.</p>
-
 <link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
 <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
 
+<h4>Icons</h4>
+<p>Icon list to search from.</p>
+
 <!-- toolbar -->
 <div class="toolbar">
 <button id="select" type="button" class="btn btn-danger btn-lg" disabled>Select <span id="select_ln" class="badge badge-light"></span></button>
+</div>
+
+<div id="modal">
+
 </div>
 
 <!-- Table -->
@@ -44,20 +42,16 @@
 </table>
 
 <script>
-var $container = $('#container')
 var $table = $('#table')
 var $select = $('#select')
 var $select_ln = $('#select_ln')
 var $selects = $('#selects')
 var $modal = $('#modal')
 
-$(function() {
-  $.get('data/icons.json', function (data) { 
-  var data = getIcons(data)
-  $table.bootstrapTable('load', data)
-  })
-});
-
+$.get('data/icons.json', function (data) {
+var data = getIcons(data);
+$table.bootstrapTable('load', data);
+})
 
 // Format
  function iconFormatter(index, row) {
@@ -74,12 +68,13 @@ return terms;
 
 // Events
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-    var selects =
-    $table.bootstrapTable('getAllSelections')
+var selects = 
+$table.bootstrapTable('getAllSelections')
     $select.prop('disabled', !selects.length);
     (selects.length > 0) ? $select_ln.text(selects.length) :    $select_ln.empty();
     })
    
+  console.log($modal);
    $select.click(function () {
      $modal.load('modal.html', function(html) {
      var html = Mustache.render(html, {body: getSelect()});
@@ -88,4 +83,3 @@ return terms;
      })
    })
 </script>
-</div>
