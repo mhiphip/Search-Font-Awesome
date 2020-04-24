@@ -23,7 +23,7 @@ function CreateDivs(data) {
 var temp = {
   "list": "{{#pages}}\n<li class=\"nav-item\"><a class=\"nav-link\" data-toggle=\"tab\" href=\"#{{&id}}\">{{&name}}</a></li>\n{{/pages}}",
   "tab": "{{#pages}}<div class=\"tab-pane fade\" id=\"{{&id}}\">{{&html}}</div>{{/pages}}"
-}         
+}
 temp.list = Mustache.render(temp.list, data);
 temp.tab = Mustache.render(temp.tab, data);
 return temp;

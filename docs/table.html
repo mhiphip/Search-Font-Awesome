@@ -2,16 +2,20 @@
 <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
 
-<h4>Icons</h4>
-<p>Icon list to search from.</p>
-
-<!-- toolbar -->
+<!-- submit -->
 <div class="toolbar">
 <button id="select" type="button" class="btn btn-danger btn-lg" disabled>Select <span id="select_ln" class="badge badge-light"></span></button>
 </div>
 
-<div id="modal">
 
+<div id="modal">
+</div>
+
+<!-- table toolbar -->
+
+<div id="toolbar">
+<select multiple="" class="form-control btn-outline-primary" id="tfilter">
+</select>
 </div>
 
 <!-- Table -->
@@ -19,14 +23,17 @@
   id="table"
   data-toggle="table"
   data-pagination="true"
-  data-toolbar="#toolbar"
+  data-auto-refresh="true"
+  data-page-size="25"
+  data-pagination-v-align="bottom"
   data-events="inputEvents"
-  data-filter-control="true"
+  data-toolbar="#toolbar"
+  data-toolbar-align="left"
+  data-buttons-class="btn btn-outline-primary"
   data-search="true"
+  data-search-align="left"
   data-stickyHeader="true"
   data-click-to-select="true"
-  data-buttons-class="btn btn-outline-primary"
-  data-show-refresh="true"
   data-show-toggle="true"
   data-show-fullscreen="true"
   >
@@ -43,19 +50,22 @@
 
 <script>
 var $table = $('#table')
+var $tfilter = $('#tfilter')
 var $select = $('#select')
 var $select_ln = $('#select_ln')
 var $selects = $('#selects')
 var $modal = $('#modal')
 
-$.get('data/icons.json', function (data) {
-var data = getIcons(data);
-$table.bootstrapTable('load', data);
-})
+$(function() {
+  $.get('data/icons.json', function (data) {
+  var data = getIcons(data);
+  $table.bootstrapTable('load', data);
+  });
+});
 
 // Format
  function iconFormatter(index, row) {
- return `<span style='font-size: 20' class="badge badge-light">
+ return `<span class="badge badge-light">
  <i class='${row.prefix} fa-${row.name} fa-fw fa-3x'></i></span><br>
   <small>${row.name}</small>
  `;
@@ -67,19 +77,26 @@ return terms;
 }
 
 // Events
-    $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+$table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
 var selects = 
 $table.bootstrapTable('getAllSelections')
-    $select.prop('disabled', !selects.length);
+// select button
+$select.prop('disabled', !selects.length);
     (selects.length > 0) ? $select_ln.text(selects.length) :    $select_ln.empty();
-    })
-   
-  console.log($modal);
-   $select.click(function () {
+})
+
+$tfilter.click(function () {
+var data = $table.bootstrapTable('getData');
+var terms = _.uniq(_.pluck(data, 'terms').flat());
+alert(terms);
+});
+
+// modal
+$select.click(function () {
      $modal.load('modal.html', function(html) {
      var html = Mustache.render(html, {body: getSelect()});
      $modal.html(html);
      $('#selects').modal('show');
      })
-   })
+})
 </script>

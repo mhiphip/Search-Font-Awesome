@@ -15,6 +15,13 @@
 	padding-left: 10px;
 	padding-right: 10px;
 }
+
+#container {
+    padding-top: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 </style>
   </head>
   <body>
@@ -24,8 +31,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <script src="data/functions.js"></script> 
 
-<!-- nav -->
-<div id="nav" class="fixed-bottom">
+<!-- navbar -->
+<div id="navbar" class="fixed-bottom">
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">Menu</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,8 +47,23 @@
 <div id="header" class="page-header text-center">
 <i class='fab fa-font-awesome fa-2x'></i>
   <h4>Awesome Icons</h4>
-  <p class="lead">Awesome Icons collections</p>
+  <p class="lead">Awesome Icons search tool</p>
   <hr class="my-4">
+</div>
+
+<!-- nav -->
+<div id="nav" class="container">
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Active</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+</ul>
 </div>
 
 <!-- container -->
@@ -50,9 +72,11 @@
 </div>
 
 <script>
+// nav
+
+// load container
 var $container = $('#container');
 $container.load('table.html', function (html) {
-console.log(html);
 }).hide().show('1000');
 </script>
 

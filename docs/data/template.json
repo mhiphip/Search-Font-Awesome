@@ -1,5 +1,7 @@
 {
   "list": "{{#pages}}\n<li class=\"nav-item\"><a class=\"nav-link\" data-toggle=\"tab\" href=\"#{{&id}}\">{{&name}}</a></li>\n{{/pages}}",
   "tab": "{{#pages}}<div class=\"tab-pane fade\" id=\"{{&id}}\"></div>{{/pages}}",
-  "container": "<div class=\"container\" id='container'>\n<h4>Icons</h4>\n<p>Icon list to search from.</p>\n\n<ul id=\"mlist\" class=\"nav nav-tabs\">\n  <li class=\"nav-item\">\n    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#home\">Home</a>\n  </li>\n    {{&list}}\n</ul>\n\n<div id=\"tabs\" class=\"tab-content\">\n  <div class=\"tab-pane fade active show\" id=\"home\">\n    <p>Home</p>\n  </div>\n  {{&tab}}\n</div>"
+  "container": "<div class=\"container\" id='container'>\n<h4>Icons</h4>\n<p>Icon list to search from.</p>\n\n<ul id=\"mlist\" class=\"nav nav-tabs\">\n  <li class=\"nav-item\">\n    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#home\">Home</a>\n  </li>\n    {{&list}}\n</ul>\n\n<div id=\"tabs\" class=\"tab-content\">\n  <div class=\"tab-pane fade active show\" id=\"home\">\n    <p>Home</p>\n  </div>\n  {{&tab}}\n</div>",
+  "dropdown": " <div id='{{id}}' class=\"dropdown-menu\">\n{{#items}}\n<a class=\"dropdown-item\" href=\"#\">{{.}}</a>\n{{/items}}\n</div>",
+  "select": "{{#options}}\n<option>{{.}}</option>\n{{/options}}"
 }
