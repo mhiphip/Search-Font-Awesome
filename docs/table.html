@@ -18,6 +18,7 @@
 <table
   id="table"
   data-toggle="table"
+  data-ajax="ajaxRequest"
   data-pagination="true"
   data-auto-refresh="true"
   data-page-size="25"
@@ -54,9 +55,12 @@ var $select_ln = $('#select_ln');
 var $selects = $('#selects');
 var $modal = $('#modal');
 
-$.getJSON('data/icons.json', function (data) {
-  $table.bootstrapTable('load', getIcons(data));
-});
+function ajaxRequest(params) {
+var url = 'data/icons.json';
+$.get(url).then(function (data) {
+      params.success(getIcons(data));
+    })
+}
 
 // Format
  function iconFormatter(index, row) {
