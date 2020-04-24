@@ -33,7 +33,6 @@
   data-stickyHeader="true"
   data-click-to-select="true"
   data-show-toggle="true"
-  data-show-export="true"
   data-show-fullscreen="true"
   >
   <thead class="thead-light">
@@ -58,6 +57,7 @@ var $modal = $('#modal');
 $.get('data/icons.json', function (data) {
   var data = getIcons(data);
   $table.bootstrapTable('load', data);
+  $table.bootstrapTable('showLoading');
 });
 
 // Format
