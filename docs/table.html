@@ -3,19 +3,13 @@
 <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
 
 <!-- submit -->
-<div class="toolbar">
 <button id="select" type="button" class="btn btn-danger btn-lg" disabled>Select <span id="select_ln" class="badge badge-light"></span></button>
-</div>
-
 
 <div id="modal">
 </div>
 
 <!-- table toolbar -->
-
 <div id="toolbar">
-<select multiple="" class="form-control btn-outline-primary" id="tfilter">
-</select>
 </div>
 
 <!-- Table -->
@@ -27,8 +21,8 @@
   data-page-size="25"
   data-pagination-v-align="bottom"
   data-events="inputEvents"
-  data-toolbar="#toolbar"
   data-toolbar-align="left"
+  data-toolbar="#toolbar"
   data-buttons-class="btn btn-outline-primary"
   data-search="true"
   data-search-align="left"
@@ -50,7 +44,7 @@
 
 <script>
 var $table = $('#table')
-var $tfilter = $('#tfilter')
+var $toolbar = $('#toolbar')
 var $select = $('#select')
 var $select_ln = $('#select_ln')
 var $selects = $('#selects')
@@ -58,10 +52,25 @@ var $modal = $('#modal')
 
 $(function() {
   $.get('data/icons.json', function (data) {
+  // table
   var data = getIcons(data);
   $table.bootstrapTable('load', data);
+  
+  // filter
+  var terms = _.uniq(_.pluck(data, 'terms').flat()).sort((a,b) => a > b);
+  GetFilter(terms);
   });
 });
+
+// 
+function GetFilter(terms) {
+  $.get('data/template.json', function (temp) {
+  var filter =
+  Mustache.render(temp.select, {options: terms, id: 'tfilter'});
+  $toolbar.append(filter);
+  console.log(filter);
+  });
+}
 
 // Format
  function iconFormatter(index, row) {
@@ -85,11 +94,13 @@ $select.prop('disabled', !selects.length);
     (selects.length > 0) ? $select_ln.text(selects.length) :    $select_ln.empty();
 })
 
-$tfilter.click(function () {
-var data = $table.bootstrapTable('getData');
-var terms = _.uniq(_.pluck(data, 'terms').flat());
-alert(terms);
-});
+function GetTerms(data) {
+  $.get('data/template.json',
+  function (temp) {
+  var options = Mustache.render(temp.select, {id:'tfilter', options: terms});
+  alert(options);
+  });
+}
 
 // modal
 $select.click(function () {
