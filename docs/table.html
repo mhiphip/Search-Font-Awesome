@@ -33,6 +33,7 @@
   data-stickyHeader="true"
   data-click-to-select="true"
   data-show-toggle="true"
+  data-show-export="true"
   data-show-fullscreen="true"
   >
   <thead class="thead-light">
@@ -55,20 +56,9 @@ var $selects = $('#selects');
 var $modal = $('#modal');
 
 $.get('data/icons.json', function (data) {
-  // table
   var data = getIcons(data);
   $table.bootstrapTable('load', data);
 });
-
-// 
-function GetFilter(terms) {
-  $.get('data/template.json', function (temp) {
-  var filter =
-  Mustache.render(temp.select, {options: terms, id: 'tfilter'});
-  $toolbar.append(filter);
-  console.log(filter);
-  });
-}
 
 // Format
  function iconFormatter(index, row) {
