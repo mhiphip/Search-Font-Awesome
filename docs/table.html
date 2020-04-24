@@ -55,8 +55,7 @@ var $selects = $('#selects');
 var $modal = $('#modal');
 
 $.getJSON('data/icons.json', function (data) {
-  var data = getIcons(data);
-  $table.bootstrapTable('load', data);
+  $table.bootstrapTable('load', getIcons(data));
 });
 
 // Format
