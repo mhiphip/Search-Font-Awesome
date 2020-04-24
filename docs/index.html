@@ -92,7 +92,6 @@ $(".nav-link").on("click", function() {
   var $this = $(this);
   var link = $this.attr('id');
   var $container = $('#container').empty();
-  console.log($container.html());
   $container.load(link);
   $this.addClass('active');
 });
