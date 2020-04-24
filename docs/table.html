@@ -53,11 +53,11 @@ var $select = $('#select');
 var $select_ln = $('#select_ln');
 var $selects = $('#selects');
 var $modal = $('#modal');
-
+$table.bootstrapTable('showLoading');
+ 
 $.get('data/icons.json', function (data) {
   var data = getIcons(data);
   $table.bootstrapTable('load', data);
-  $table.bootstrapTable('showLoading');
 });
 
 // Format
