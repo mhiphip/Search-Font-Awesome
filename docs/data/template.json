@@ -3,5 +3,6 @@
   "tab": "{{#pages}}<div class=\"tab-pane fade\" id=\"{{&id}}\"></div>{{/pages}}",
   "container": "<div class=\"container\" id='container'>\n<h4>Icons</h4>\n<p>Icon list to search from.</p>\n\n<ul id=\"mlist\" class=\"nav nav-tabs\">\n  <li class=\"nav-item\">\n    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#home\">Home</a>\n  </li>\n    {{&list}}\n</ul>\n\n<div id=\"tabs\" class=\"tab-content\">\n  <div class=\"tab-pane fade active show\" id=\"home\">\n    <p>Home</p>\n  </div>\n  {{&tab}}\n</div>",
   "dropdown": " <div id='{{id}}' class=\"dropdown-menu\">\n{{#items}}\n<a class=\"dropdown-item\" href=\"#\">{{.}}</a>\n{{/items}}\n</div>",
-  "select": "<select multiple=\"\" class=\"form-control btn-outline-primary mw-30\" id=\"{{id}}\">\n{{#options}}\n<option>{{.}}</option>\n{{/options}}\n</select> "
+  "select": "{{#data}}\n<div id=\"{{g_id}}\" class=\"col\">\n<label for=\"{{id}}\">{{name}}</label>\n<select id=\"{{id}}\" class=\"form-control\">\n{{#values}}\n<option selected{{#pre}}{{/pre}}>{{.}}</option>\n{{/values}}\n</select>\n</div>\n{{/data}}",
+  "color": "{{#data}}\n<div id=\"{{id}}\" class=\"input-group\" title=\"\">\n<input type=\"text\" class=\"form-control input-md\" value=\"{{default}}\"/>\n<span class=\"input-group-append\">\n<span class=\"input-group-text colorpicker-input-addon\"><i></i></span></span>\n</div>\n{{/data}}"
 }

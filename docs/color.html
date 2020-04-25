@@ -1,22 +1,61 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/css/bootstrap-colorpicker.min.css" rel="stylesheet">
 
-<div id="cp1" class="input-group" title="Using input value">
-  <input type="text" class="form-control input-lg" value="#DD0F20FF"/>
-  <span class="input-group-append">
-    <span class="input-group-text colorpicker-input-addon"><i></i></span>
-  </span>
+<!-- form -->
+<div class="jumbotron text-dark border-primary mb-3">
+ <form>
+  <div id="cpformat" class="form-row">
+  </div>
+</br>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
 </div>
-
-<div id="cp2" class="input-group" title="Using input value">
-  <input type="text" class="form-control input-lg" value="#DD0F20FF"/>
-  <span class="input-group-append">
-    <span class="input-group-text colorpicker-input-addon"><i></i></span>
-  </span>
-</div>
-
 
 <script>
-$('#cp1, #cp2').colorpicker();
+var $cpformat = $('#cpformat');
+var data = {"data":[{"name":"Scheme", "pre": 2, "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return  this.name.toLowerCase();}};
+
+var temp = "{{#data}}\n<div id=\"{{g_id}}\" class=\"col\">\n<label for=\"{{id}}\">{{name}}</label>\n<select id=\"{{id}}\" class=\"form-control\">\n{{#values}}\n<option>{{.}}</option>\n{{/values}}\n</select>\n</div>\n{{/data}}";
+var html = Mustache.render(temp, data);
+$cpformat.append(html);
+</script>
+
+<!-- color -->
+<div id="cpinput" class="jumbotron card border-secondary bg-white mb-3">
+<form class="form-inline">
+
+<label for="cp1">Frontground</label>
+  <div id="cp1" class="input-group mb-2 mr-sm-2" title="Frontground">
+    <input type="text" class="form-control input-sm" value=""/>
+    <span class="input-group-append">
+    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+    </span>
+  </div>
+  
+  <label for="cp2">Background</label>
+  <div id="cp2" class="input-group mb-2 mr-sm-2" title="Background">
+    <input type="text" class="form-control input-sm" value=""/>
+    <span class="input-group-append">
+    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+    </span>
+  </div>
+  
+</form>
+</div>
+
+<script>
+var $cpinput = $('#cpinput');
+var dcolors =   [{name: "front", color: "grey", value: "#888"}, {name: "back", color: "transparent", value: "transparent"}];
+
+$(function () {
+dcolors.forEach((dc, i) => {
+$(`#cp${i+1}`).colorpicker({color: dc.value, format: 'hex'});
+});
+
+  $('#cp1').on('colorpickerChange', 
+function(event) {
+    $('#cpformat').css('background-color', event.color.toString());
+    });
+});
 </script>
 
   <script src="https://unpkg.com/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
