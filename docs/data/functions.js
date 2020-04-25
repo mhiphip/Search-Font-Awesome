@@ -4,7 +4,7 @@ return self.indexOf(value) === index;
 
 function getIcons(data) {
 var styles = {'solid':'fas','regular':'far','brands':'fab'};
-var values = Object.entries(data).reduce((acc, [fk, fv], i) => (acc[i] = {name: fk, label: fv.label, styles: fv.styles, unicode: fv.unicode, prefix: styles[fv.styles[0]], terms: fv.search.terms}, acc), []);
+var values = Object.entries(data).reduce((acc, [fk, fv], i) => (acc[i] = {name: fk, label: fv.label, styles: fv.styles, unicode: fv.unicode, prefix: fv.styles.map(st => styles[st]), terms: fv.search.terms}, acc), []);
 return values;
 }
 

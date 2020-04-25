@@ -13,16 +13,21 @@
 <!-- table toolbar -->
 <div id="toolbar">
 </div>
-  
+<style>
+td {
+  max-height: 50;
+}
+</style>
 <!-- Table -->
 <table
   id="table"
   data-toggle="table"
+  data-height="600"
+  data-auto-refresh="true"
   data-ajax="ajaxRequest"
   data-pagination="true"
-  data-auto-refresh="true"
-  data-page-size="25"
-  data-pagination-v-align="top"
+  data-page-size="50"
+  data-pagination-v-align="bottom"
   data-events="inputEvents"
   data-buttons-align="left"
   data-search-align="left"
@@ -38,11 +43,13 @@
   >
   <thead class="thead-light">
     <tr>
-      <th data-field="select" data-checkbox="true">Select</th>
-     <th data-field="icon" data-formatter="iconFormatter" data-align="center">Icon</th>
-     <th data-field="label">Label</th>
-     <th data-field="unicode">Unicode</th>
-     <th data-field="terms" data-formatter="termsFormatter" data-width="60">Terms</th>
+      <th data-field="select" data-checkbox="true">select</th>
+     <th data-field="icon" data-formatter="iconFormatter" data-align="center">icon</th>
+     <th data-field="name">name</th>
+     <th data-field="label">label</th>
+     <th data-field="unicode">unicode</th>
+     <th data-field="styles">styles</th>
+     <th data-field="terms" data-width="200" data-formatter="termsFormatter">terms</th>
     </tr>
   </thead>
 </table>
@@ -65,13 +72,12 @@ $.get(url).then(function (data) {
 // Format
  function iconFormatter(index, row) {
  return `<span class="badge badge-light">
- <i class='${row.prefix} fa-${row.name} fa-fw fa-3x'></i></span><br>
-  <small>${row.name}</small>
- `;
+ <i class='${row.prefix[0]} fa-${row.name} fa-fw fa-3x'></i></span>`;
 }
 
 function termsFormatter(index, row) {
-var terms = row.terms.map(term => `<span class="badge badge-secondary disable">${term}</span>`).join(' ')
+var terms = row.terms.map(term => `<span class="badge badge-success">${term}</span>`).join(' ');
+console.log(terms);
 return terms;
 }
 
