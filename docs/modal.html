@@ -13,17 +13,13 @@
       </div>
       <div class="modal-footer">
       <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-warning" id="Color" data-dismiss="modal">Color</button>
-      <button type="button" class="btn btn-danger" id="Save" data-dismiss="modal">Save</button>
+      <button type="button" class="btn btn-warning" id="Color" data-dismiss="modal">OK</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-$('#Color').click(function() {
-$container.load('color.html').show('slow');
-})
 
 $('#Save').click(function() {
 var selects = $table.bootstrapTable('getAllSelections'); 

@@ -3,7 +3,7 @@
 <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
 
 <!-- submit -->
-<button id="select" type="button" class="btn btn-danger" disabled>Select <span id="select_ln" class="badge badge-light"></span></button>
+<button id="select" type="button" class="btn btn-info" disabled>Select <span id="select_ln" class="badge badge-light"></span></button>
 
 <div id="modal">
 </div>
@@ -20,15 +20,16 @@
   data-toggle="table"
   data-height="600"
   data-auto-refresh="true"
-  data-ajax="ajaxRequest"
+  data-url="data/colornames.bestof.json"
   data-pagination="true"
   data-page-size="50"
   data-pagination-v-align="bottom"
+  data-events="inputEvents"
   data-buttons-align="left"
   data-search-align="left"
   data-toolbar-align="right"
   data-toolbar="#toolbar"
-  data-buttons-class="btn btn-outline-primary"
+  data-buttons-class="btn btn-outline-info"
   data-search="true"
   data-search-align="left"
   data-stickyHeader="true"
@@ -39,12 +40,8 @@
   <thead class="thead-light">
     <tr>
       <th data-field="select" data-checkbox="true">select</th>
-     <th data-field="icon" data-formatter="iconFormatter" data-align="center">icon</th>
-     <th data-field="name" data-sortable="true">name</th>
-     <th data-field="label">label</th>
-     <th data-field="unicode">unicode</th>
-     <th data-field="styles">styles</th>
-     <th data-field="terms" data-formatter="termsFormatter" data-width="60">terms</th>
+      <th data-field="hex" data-formatter="hexFormatter">hex</th>
+     <th data-field="name">name</th>
     </tr>
   </thead>
 </table>
@@ -52,28 +49,17 @@
 var $table = $('#table');
 var $toolbar = $('#toolbar');
 var $select = $('#select');
-var $select_ln = $('#select_ln');
-var $selects = $('#selects');
-var $modal = $('#modal');
-
-function ajaxRequest(params) {
-var url = 'data/icons.json';
-$.get(url).then(function (data) {
-      params.success(getIcons(data));
-    });
-}
 
 // Format
- function iconFormatter(index, row) {
- return `<span class="badge badge-light">
- <i class='${row.prefix[0]} fa-${row.name} fa-fw fa-3x'></i></span>`;
+function hexFormatter(index, row) {
+return `<span class="badge badge-pill shadow-sm" style="background-color: ${row.hex}">${row.hex}</span>`;
 }
 
-function termsFormatter(index, row) {
-var terms = row.terms.map(term => `<span class="badge badge-success">${term}</span>`).join(' ');
-return `<div style='height: 50px' class='mh-25 overflow-auto'>${terms}</div>`;
-}
-
+  $(function() {
+  $table.bootstrapTable();
+$table.bootstrapTable('refreshOptions', { classes: "table table-hover" })
+});
+  
 // Events
 $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
 var selects = 

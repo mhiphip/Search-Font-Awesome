@@ -1,5 +1,5 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/css/bootstrap-colorpicker.min.css" rel="stylesheet">
-
+  <script src="/docs/data/color-scheme.min.js"></script>
 <!-- form -->
 <div class="jumbotron text-dark border-primary mb-3">
  <form id='fform'>
@@ -11,11 +11,27 @@
 </div>
 
 <script>
+scm = new ColorScheme;
+scm.from_hue(21)
+   .scheme('triade')
+   .distance(0.1)
+   .add_complement(false)
+   .variation('pastel')
+   .web_safe(true);
+var colors = scm.colors();
+
+console.log(colors);
+
 // color format
 var $fform = $('#fform');
 var $cpformat = $('#cpformat');
 var $formatsub = $('#formatsub');
 var $def = {scheme: 'basic', format: 'rgb'};
+
+var data = {"url":"http://colormind.io/api/","method":"POST","data":{"model":"ui"}};
+data.callback = function(data) {console.log(data)};
+
+httpRq(data);
 
 var $data = {"data":[{"name":"Scheme", "value": 'basic', "gid": "sgr","values":["basic","complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", value: 'rgb', values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return  this.name.toLowerCase();}};
 
@@ -34,17 +50,16 @@ $.get('data/template.json',
 });
 
 </script>
-
 <!-- color -->
 <div id="cpinput" class="jumbotron card border-secondary shadow p-3 mb-3 bg-white">
 <form>
   <label for="cp1">Frontground</label>
-  <div id="cp1" class="input-group mb-2 mr-sm-2" title="Frontground">
-    <input type="text" class="form-control input-sm" value=""/>
-    <span class="input-group-append">
+<div id="cp1" class="input-group">
+  <input type="text" class="form-control input-lg" value=""/>
+  <span class="input-group-append">
     <span class="input-group-text colorpicker-input-addon"><i></i></span>
-    </span>
-  </div>
+  </span>
+</div>
 
   <label for="cp2">Background</label>
   <div id="cp2" class="input-group mb-2 mr-sm-2" title="Background">
@@ -66,6 +81,7 @@ function GetInput() {
   $dcolors.forEach((dc, i) => {
   $(`#cp${i+1}`).colorpicker({color: dc.value, container: true, format: 'rgb'});
   });
+  console.log($('#cp1').html());
 }
 
 // submit

@@ -28,3 +28,15 @@ temp.list = Mustache.render(temp.list, data);
 temp.tab = Mustache.render(temp.tab, data);
 return temp;
 }
+
+function httpRq(data) {
+var http = new XMLHttpRequest();
+http.onreadystatechange = function() {
+   if(http.readyState == 4 && http.status == 200) {
+   data.callback(JSON.parse(http.responseText));
+   }
+}
+
+http.open(data.method, data.url, true);
+http.send(JSON.stringify(data.data));
+}
