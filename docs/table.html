@@ -41,7 +41,7 @@
     <tr>
       <th data-field="select" data-checkbox="true">select</th>
      <th data-field="icon" data-formatter="iconFormatter" data-align="center">icon</th>
-     <th data-field="name">name</th>
+     <th data-field="name" data-sortable="true">name</th>
      <th data-field="label">label</th>
      <th data-field="unicode">unicode</th>
      <th data-field="styles">styles</th>
@@ -78,7 +78,7 @@ return `<div style='height: 50px' class='mh-25 overflow-auto'>${terms}</div>`;
 // Events
 $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
 var selects = 
-$table.bootstrapTable('getAllSelections')
+$table.bootstrapTable('getAllSelections');
 // select button
 $select.prop('disabled', !selects.length);
     (selects.length > 0) ? $select_ln.text(selects.length) :    $select_ln.empty();

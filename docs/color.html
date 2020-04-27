@@ -2,35 +2,50 @@
 
 <!-- form -->
 <div class="jumbotron text-dark border-primary mb-3">
- <form>
+ <form id='fform'>
   <div id="cpformat" class="form-row">
   </div>
 </br>
-<button type="submit" class="btn btn-primary">Submit</button>
+<button id="formatsub" class="btn btn-info" disabled>Change</button>
 </form>
 </div>
 
 <script>
+// color format
+var $fform = $('#fform');
 var $cpformat = $('#cpformat');
-var data = {"data":[{"name":"Scheme", "pre": 2, "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return  this.name.toLowerCase();}};
+var $formatsub = $('#formatsub');
+var $def = {scheme: 'basic', format: 'rgb'};
 
-var temp = "{{#data}}\n<div id=\"{{g_id}}\" class=\"col\">\n<label for=\"{{id}}\">{{name}}</label>\n<select id=\"{{id}}\" class=\"form-control\">\n{{#values}}\n<option>{{.}}</option>\n{{/values}}\n</select>\n</div>\n{{/data}}";
-var html = Mustache.render(temp, data);
-$cpformat.append(html);
+var $data = {"data":[{"name":"Scheme", "value": 'basic', "gid": "sgr","values":["basic","complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", value: 'rgb', values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return  this.name.toLowerCase();}};
+
+var $dcolors = [{name: "front", color: "grey", value: "#888"}, {name: "back", color: "transparent", value: "transparent"}];
+
+$.get('data/template.json',
+  function  (temp) {
+  var html = Mustache.render(temp.select, $data);
+  $cpformat.append(html);
+  GetInput();
+    
+// form change
+  $fform.on('change', function(e) { 
+  $formatsub.prop('disabled', false);
+  });
+});
+
 </script>
 
 <!-- color -->
-<div id="cpinput" class="jumbotron card border-secondary bg-white mb-3">
-<form class="form-inline">
-
-<label for="cp1">Frontground</label>
+<div id="cpinput" class="jumbotron card border-secondary shadow p-3 mb-3 bg-white">
+<form>
+  <label for="cp1">Frontground</label>
   <div id="cp1" class="input-group mb-2 mr-sm-2" title="Frontground">
     <input type="text" class="form-control input-sm" value=""/>
     <span class="input-group-append">
     <span class="input-group-text colorpicker-input-addon"><i></i></span>
     </span>
   </div>
-  
+
   <label for="cp2">Background</label>
   <div id="cp2" class="input-group mb-2 mr-sm-2" title="Background">
     <input type="text" class="form-control input-sm" value=""/>
@@ -43,19 +58,49 @@ $cpformat.append(html);
 </div>
 
 <script>
+// color picker
 var $cpinput = $('#cpinput');
-var dcolors =   [{name: "front", color: "grey", value: "#888"}, {name: "back", color: "transparent", value: "transparent"}];
+var $cpinputs = $("div[id^='cp']");
 
-$(function () {
-dcolors.forEach((dc, i) => {
-$(`#cp${i+1}`).colorpicker({color: dc.value, format: 'hex'});
+function GetInput() {
+  $dcolors.forEach((dc, i) => {
+  $(`#cp${i+1}`).colorpicker({color: dc.value, container: true, format: 'rgb'});
+  });
+}
+
+// submit
+$formatsub.on('click', function(e) { 
+e.preventDefault();
+  
+var $cp = $('#cp1');
+var $cpin = $('#cp1 > input');
+var $cphtml = $('#cp1').html();
+var cp = $cp.colorpicker('colorpicker');
+
+var fchilds = $fform.children();
+  _.keys($def).forEach(id =>
+  $def[id] = fchilds.find('#' + id).val()); 
+  $def.id = '#cp1';
+  $def.color = $cpin.val();
+  cp.destroy();
+  UpdateCps($def);
+console.log(JSON.stringify($def) + $cp.html());
 });
 
-  $('#cp1').on('colorpickerChange', 
-function(event) {
-    $('#cpformat').css('background-color', event.color.toString());
-    });
-});
+function UpdateCps(data) {
+$(data.id).colorpicker({format: data.format, container: true, color: data.color, extensions: [{name: 'swatches', options: {colors: {'s1': '#000', 's2': '#000', 's3': '#000', 's4': '#000'},
+namesAsValues: false}}]}).on('colorpickerChange colorpickerCreate', function (e) {
+var colors = e.color.generate(data.scheme);
+console.log(colors);
+colors.forEach(function (color, i) {
+var colorStr = color.string(),
+swatch = e.colorpicker.picker.find('.colorpicker-swatch[data-name="s' + (i + 1) + '"]');
+swatch.attr('data-value', colorStr)
+.attr('title', colorStr).find('> i')
+.css('background-color', colorStr);
+ });});
+}
+
 </script>
 
   <script src="https://unpkg.com/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
