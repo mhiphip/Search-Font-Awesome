@@ -67,16 +67,19 @@ blockquote {
 
 <!-- container -->
 <div class="container" id='container'>
-
 </div>
 
 <script>
 var $container = $('#container');
-var $modal = $("#modal")
+var $modal = $("#modal");
 var $nlist = $("a.nav-link");
-$nlist.find('.active').click();
+
 
 // tabs
+setTimeout(function () {
+  $nlist.eq(0).trigger("click");
+}, 800);
+
 $(".nav-link").on("click", function() {
   var $active = $("a.active");
   $active.removeClass('active');

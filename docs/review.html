@@ -1,0 +1,24 @@
+<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" data-auto-replace-svg></script>
+<script src="http://code.jquery.com/jQuery-3.2.1.min.js"></script>
+ <div id="review" class="fa-4x">
+ <span class="fa-stack" style="vertical-align: top;">
+  <i class="far fa-circle fa-stack-2x" style="background:MistyRose"></i>
+  <i class="fas fa-flag fa-stack-1x"></i>
+</span>
+<span class="fa-stack" style="vertical-align: top;">
+  <i class="fas fa-circle fa-stack-2x"></i>
+  <i class="fas fa-flag fa-stack-1x fa-inverse"></i>
+</span>
+</div>
+<script>
+$(function() {
+var svgs = $("svg");
+var $review = $("#review");
+console.log($review.html());
+var svg = svgs[1];
+var serializedSVG = new XMLSerializer().serializeToString(svg);
+var base64Data = window.btoa(serializedSVG);
+var result = "data:image/svg+xml;base64," + base64Data;
+document.write(result);
+});
+</script>

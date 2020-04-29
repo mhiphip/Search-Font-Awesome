@@ -21,8 +21,9 @@
 </div>
 
 <script>
-
 $('#Next').click(function() {
-
-});
+var $nid = $('a.active').parent().next().find('> a')[0];
+$nid.click();
+console.log($nid);
+})
 </script>

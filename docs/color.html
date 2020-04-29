@@ -41,6 +41,7 @@ $.get('data/template.json',
 </div>
 
 <script>
+console.log($('#result').html());
 // color picker
 var $cpinput = $('#cpinput');
 var $cpinputs = $("div[id^='cp']");
@@ -87,7 +88,6 @@ e.preventDefault();
 var $div = $cpinput.find('div');
 
 _.keys($def).forEach(id => $def[id] = $fform.children().find(`#${id}`).val());
-
 GetInput($def.input);
 });
 
