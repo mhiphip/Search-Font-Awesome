@@ -4,10 +4,6 @@
 
 <!-- submit -->
 <button id="select" type="button" class="btn btn-danger" disabled>Select <span id="select_ln" class="badge badge-light"></span></button>
-
-<div id="modal">
-</div>
-
 <hr class="my-2">
   
 <!-- table toolbar -->
@@ -86,10 +82,7 @@ $select.prop('disabled', !selects.length);
 
 // modal
 $select.click(function () {
-     $modal.load('modal.html', function(html) {
-     var html = Mustache.render(html, {body: getSelect()});
-     $modal.html(html);
-     $('#selects').modal('show');
-     })
+var icons = $table.bootstrapTable('getAllSelections');
+GetResult({icons: icons});
 })
 </script>

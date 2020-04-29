@@ -40,3 +40,16 @@ http.onreadystatechange = function() {
 http.open(data.method, data.url, true);
 http.send(JSON.stringify(data.data));
 }
+
+function UpdateCps(data) {
+$(data.id).colorpicker({format: data.format, container: true, extensions: [{name: 'swatches', options: {colors: {'s1': '#000', 's2': '#000', 's3': '#000', 's4': '#000'},
+namesAsValues: false}}]}).on('colorpickerChange colorpickerCreate', function (e) {
+var colors = e.color.generate(data.scheme);
+colors.forEach(function (color, i) {
+var colorStr = color.string(),
+swatch = e.colorpicker.picker.find('.colorpicker-swatch[data-name="s' + (i + 1) + '"]');
+swatch.attr('data-value', colorStr)
+.attr('title', colorStr).find('> i')
+.css('background-color', colorStr);
+ });});
+}

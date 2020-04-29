@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div class="modal fade" id="selects" tabindex="-1" role="dialog" aria-labelledby="selects" aria-hidden="true">
+<div class="modal fade" id="result" tabindex="-1" role="dialog" aria-labelledby="selects" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -9,11 +9,12 @@
         </button>
       </div>
       <div class="modal-body">
-        {{&body}}
+      <blockquote class="card border-primary mb-3">
+      </blockquote>
       </div>
       <div class="modal-footer">
       <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-warning" id="Color" data-dismiss="modal">OK</button>
+      <button type="button" class="btn btn-warning" id="Next" data-dismiss="modal">Next</button>
       </div>
     </div>
   </div>
@@ -21,11 +22,7 @@
 
 <script>
 
-$('#Save').click(function() {
-var selects = $table.bootstrapTable('getAllSelections'); 
-$container.load('result.html',function(html) {
-  var sel = JSON.stringify(selects);
-  $('#result').text(sel);
-  }).show('slow');
-})
+$('#Next').click(function() {
+
+});
 </script>
