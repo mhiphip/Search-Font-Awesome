@@ -17,7 +17,7 @@
     "elements": [
       {
         "name": "basic",
-        "template": "\n\\{{#icons}}\n<i oclass='\\{{prefix}} fa-\\{{name}}'></i>\n\\{{/icons}}\n"
+        "template": "\n\\{{#icons}}\n<i class='\\{{prefix}} fa-\\{{name}}'></i>\n\\{{/icons}}\n"
       },
       {
         "name": "list",

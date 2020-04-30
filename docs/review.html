@@ -1,57 +1,63 @@
-<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" data-auto-replace-svg="nest"></script>
-<script src="http://code.jquery.com/jQuery-3.2.1.min.js"></script>
- <div id="review" class="fa-4x">
- <span class="fa-stack" style="font-size: 48px; vertical-align: top; background-color:MistyRose">
-  <i class="far fa-square fa-stack-2x" style="color:MistyRose"></i>
-  <i class="fas fa-flag fa-stack-1x"></i>
-</span>
-<span class="fa-stack" style="font-size: 48px; vertical-align: top;">
-  <i class="fas fa-circle fa-stack-2x"></i>
-  <i class="fas fa-flag fa-stack-1x fa-inverse"></i>
-</span>
+<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
+
+<!-- submit -->
+<button id="rbtn" type="button" class="btn btn-info" disabled>Select <span id="rbtn_ln" class="badge badge-light"></span></button>
+
+<!-- table toolbar -->
+<div id="toolbar">
 </div>
-<div id="result">
-    <canvas id="myCanvas" width="600" height="600" style="background-color:MistyRose"></canvas>
-    <p id="imageOutput"></p>
-</div>
+
+<!-- Table -->
+<table
+  id="rtable"
+  data-toggle="table"
+  data-height="600"
+  data-auto-refresh="true"
+  data-pagination="true"
+  data-page-size="50"
+  data-pagination-v-align="bottom"
+  data-events="inputEvents"
+  data-buttons-align="left"
+  data-search-align="left"
+  data-toolbar-align="right"
+  data-toolbar="#toolbar"
+  data-buttons-class="btn btn-outline-info"
+  data-search="true"
+  data-search-align="left"
+  data-stickyHeader="true"
+  data-click-to-select="true"
+  data-show-toggle="true"
+  data-show-fullscreen="true"
+  >
+  <thead class="thead-light">
+    <tr>
+      <th data-field="select" data-checkbox="true">select</th>
+      <th data-field="hex" data-formatter="hexFormatter">hex</th>
+     <th data-field="name">name</th>
+    </tr>
+  </thead>
+</table>
 <script>
-$(function() {
-var svgs = $("svg");
-var $review = $("#review");
-var $output = $("#imageOutput");
+var $rtable = $('#rtable');
+var $rtoolbar = $('#rtoolbar');
+var $rselect = $('#rselect');
 
-var svg = svgs[1];
-console.log($review.html());
+// Format
 
-var serializedSVG = new XMLSerializer().serializeToString(svg);
-var base64Data = window.btoa(serializedSVG);
-var result = "data:image/svg+xml;base64," + base64Data;
+  $(function() {
+  $rtable.bootstrapTable();
+  });
+  
+// Events
+$rtable.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+var selects = 
+$table.bootstrapTable('getAllSelections');
+// select button
+$rselect.prop('disabled', !selects.length);
+    (selects.length > 0) ? $select_ln.text(selects.length) :    $select_ln.empty();
+})
 
-function drawImage(imageObj) {
-        var canvas = document.getElementById('myCanvas');
-        var context = canvas.getContext('2d');
-        var x = 0;
-        var y = 0;
-
-        context.drawImage(imageObj, x, y);
-        var imageData = context.getImageData(x, y, imageObj.width, imageObj.height);
-        var data = imageData.data;
-        context.putImageData(imageData, x, y);
-}
-      
-      var imageObj = new Image();
-      imageObj.onload = function() {
-        drawImage(this);
-        var canvas = document.getElementById('myCanvas');
-        document.getElementById("imageOutput").appendChild(convertCanvasToImage(canvas));
-      };
-      imageObj.src = result;
-      
-	function convertCanvasToImage(canvas) {
-		var image = new Image();
-		image.src = canvas.toDataURL("image/png");
-		console.log(image.src);
-		return image;
-	}
 })
 </script>

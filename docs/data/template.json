@@ -7,5 +7,6 @@
   "colors": {
     "dropdown": "{{#values}}\n<a class=\"dropdown-item\" href=\"#\" style=\"background-color: {{.}}\">{{.}}</a>\n{{/values}}",
     "div": "{{#data}}\n<label for='{{id}}'>{{label}}</label>\n<div id='{{id}}' class='input-group mb-2 mr-sm-2'>\n<span class='input-group-prepend'>\n  <button class='btn btn-outline-dark dropdown-toggle' type='button' data-toggle='dropdown'>Input</button>\n  <span id='{{id}}_ip' class='dropdown-menu'>\n  </span>\n</span>\n  <input id='{{id}}_text' type='text' class='form-control input-sm' value='{{value}}'/>\n  <span class='input-group-append'>\n  <span class='input-group-text colorpicker-input-addon'><i></i></span>\n  </span>\n</div>\n{{/data}}"
-  }
+  },
+  "icons": "{{#icons}}\n<span class=\"border border-white\">\n<i class='{{prefix}} fa-{{name}}'></i>\n</span>\n{{/icons}}"
 }

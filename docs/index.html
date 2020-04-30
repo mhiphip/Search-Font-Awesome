@@ -10,18 +10,6 @@
 <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.css"> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <style>
-#header { 
-    padding-top: 20px;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-#container {
-    padding-top: 20px;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
 blockquote {
   height: 200px;
   overflow: scroll;
@@ -35,68 +23,78 @@ blockquote {
 <!-- Custom -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-<script src="data/functions.js"></script> 
+<script src="data/functions.js"></script>
 <script src="data/color_converters.js"></script> 
-
+<!-- mustache -->
+<div id="template">
+<script id="icons" type="x-tmpl-mustache">
+\{{#icons}}
+<span class="border border-white">
+<i class='\{{prefix}} fa-\{{name}}'></i>
+</span>
+\{{/icons}}
+</script>
+</div>
 
 <!-- header -->
-<div id="header" class="page-header text-center">
+<div id="header" class="jumbotron page-header bg-light text-dark text-center">
 <i class='fab fa-font-awesome fa-2x'></i>
-  <h4>Awesome Icons</h4>
+  <h4 class="display-5">Awesome Icons</h4>
   <p class="lead">Awesome Icons search tool</p>
-  <hr class="my-4">
 </div>
 
+
+<div class="container">
+  <div id='review'>
+  <div style="font-size: 48px">
+  
+  </div>
+  </div>
+  
 <!-- nav -->
-<div id="nav" class="container">
-<ul id="nlist" class="nav nav-tabs">
-    <li class="nav-item">
-    <a class="nav-link active" href="#" id="icons.html">Icons</a>
-  </li>
-    <li class="nav-item">
-    <a class="nav-link" href="#" id="color.html">Color</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#" id="color-table.html">Color</a>
-  </li>
-</ul>
-</div>
-
-<div id="modal">
-</div>
-
-<!-- container -->
-<div class="container" id='container'>
+<nav id="navs" class="nav nav-tabs nav-fill" role="tablist">
+<a class="nav-item nav-link active" id="icons.html">Icons</a>
+<a class="nav-item nav-link" id="color.html">Color</a>
+<a class="nav-item nav-link" id="color-table.html">Get</a>
+<a class="nav-item nav-link" id="review.html">RV</a>
+</nav>
+ <!-- container -->
+  <div id='container'>
+  </div>
 </div>
 
 <script>
 var $container = $('#container');
 var $modal = $("#modal");
-var $nlist = $("a.nav-link");
+var $nlist = $("#navs a");
+var $temps = $("#template > script");
 
 
 // tabs
 setTimeout(function () {
-  $nlist.eq(0).trigger("click");
+  $nlist.first().trigger("click");
 }, 800);
 
-$(".nav-link").on("click", function() {
+$nlist.on("click", function(e) {
+  var $this = $(this);
   var $active = $("a.active");
   $active.removeClass('active');
-  var $this = $(this);
   var link = $this.attr('id');
-  var $container = $('#container').empty();
+  var $container = $
+  ('#container').empty();
   $this.addClass('active');
   $container.load(link);
 });
-  
-$modal.load("modal.html");
+
+// collapse
+console.log($('#result'));
 
 // load modal
 function GetResult(data) {
 $('#result').find('blockquote').text(JSON.stringify(data));
 $('#result').modal('show');
 }
+
 </script>
 
 <!-- Optional JavaScript -->
