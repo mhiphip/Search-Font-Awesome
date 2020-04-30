@@ -47,7 +47,13 @@ blockquote {
 <div class="container">
   <div id='review'>
   <div style="font-size: 48px">
-  
+  <i class="fas fa-clock" style="color:#2196F3"></i>
+<i class="far fa-clock" style="color:#2196F3"></i>
+  <i class="fas fa-flag" style="color:#2196F3"></i>
+ <i class="fas fa-bookmark" style="color:#2196F3"></i>
+
+   <i class="fas fa-seedlaing" style="background:MistyRose; color: red"></i>
+   
   </div>
   </div>
   
@@ -68,7 +74,8 @@ var $container = $('#container');
 var $modal = $("#modal");
 var $nlist = $("#navs a");
 var $temps = $("#template > script");
-
+var $review = $("#review");
+$review.data("icons");
 
 // tabs
 setTimeout(function () {
@@ -87,7 +94,9 @@ $nlist.on("click", function(e) {
 });
 
 // collapse
-console.log($('#result'));
+$review.on("update", function(e) {
+console.log($(this).data());
+});
 
 // load modal
 function GetResult(data) {

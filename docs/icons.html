@@ -3,7 +3,7 @@
 <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
 
 <!-- submit -->
-<button id="submit" type="button" class="btn btn-danger" onclick="SubmitIcons(this)" disabled>Submit <span class="badge badge-light"></span></button>
+<button id="submit" type="button" class="btn btn-danger" onclick="SubmitIcons()" disabled>Submit <span class="badge badge-light"></span></button>
 
 <!-- table toolbar -->
 <div id="toolbar">
@@ -74,8 +74,10 @@ var terms = row.terms.map(term => `<span class="badge badge-success">${term}</sp
 return `<div style='height: 50px' class='mh-25 overflow-auto'>${terms}</div>`;
 }
 
+
 // Events
 $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+    console.log($table.html());
 var selects = 
 $table.bootstrapTable('getAllSelections');
 var sspan = $submit.find("> span");
