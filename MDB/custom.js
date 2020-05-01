@@ -1,7 +1,6 @@
 $(document).ready(function () {
-var $icons = $("#icons");
+  $('#default').dataTable({
 
-  $icons.dataTable({
     columnDefs: [{
       orderable: false,
       className: 'select-checkbox select-checkbox-all',
@@ -13,10 +12,9 @@ var $icons = $("#icons");
     }
   });
   
-var $review = $("#review");
-console.log($review);
-$review.load("/template/Button/button icons.html", function(html) {
-console.log(html);
-});
+
+var $example = $('#example');
+$example.load("/directory/icons.html");
+console.log($example.html());
 
 });
