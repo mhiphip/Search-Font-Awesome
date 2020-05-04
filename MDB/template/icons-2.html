@@ -11,7 +11,6 @@ $.extend($.fn.bootstrapTable.defaults,
   {
   pagination: true,
   pageSize: 50,
-  height:600
   });
    $.extend($.fn.bootstrapTable.columnDefaults, {
       sortable: true
@@ -20,16 +19,18 @@ $.extend($.fn.bootstrapTable.defaults,
 </script>
 
 <!-- submit -->
-<button id="submit" type="button" class="btn btn-danger" disabled>Submit <span class="badge badge-light"></span></button>
+<button id="submit" type="button" class="btn btn-danger" onclick="SelectIcons()" disabled>Submit <span class="badge badge-light"></span></button>
     
 <!-- table toolbar -->
 <div id="toolbar" role="toolbar">
+</div>
 </div>
 
 <!-- Table -->
 <table
   id="table"
   data-toggle="table"
+  data-height="600"
   data-unique-id="name"
   data-classes="table table-hover table-borderless px-1"
   data-thead-classes="default-color white-text"
@@ -37,7 +38,6 @@ $.extend($.fn.bootstrapTable.defaults,
   data-pagination="true"
   data-page-size="50"
   data-click-to-select="true"
-  multipleSelectRow: "true"
   data-toolbar="#toolbar"
   data-buttons-class="btn teal white-text darken-4 btn-sm px-3"
   data-search="true"
@@ -47,6 +47,7 @@ $.extend($.fn.bootstrapTable.defaults,
   >
   <thead>
     <tr>
+    <th data-field="index" data-formatter="indexFormatter" data-visible="false"></th>
     <th data-field="state" data-checkbox="true"></th>
     <th data-field="icon" data-formatter="iconFormatter" data-align="center">icon</th>
      <th data-field="name">name</th>
@@ -55,6 +56,7 @@ $.extend($.fn.bootstrapTable.defaults,
      <th data-field="prefixes">prefixes</th>
      <th data-field="styles">styles</th>
      <th data-field="terms" data-formatter="termsFormatter" data-width="60">terms</th>
+     <th data-field="button" data-formatter="buttonFormatter" data-events="operateEvents">button</th>
     </tr>
   </thead>
 </table>
@@ -63,7 +65,9 @@ $.extend($.fn.bootstrapTable.defaults,
 var $table = $('#table');
 var $toolbar = $('#toolbar');
 var $submit = $('#submit');
+var $update = $('#update');
 var $selects = $('#selects');
+var $modal = $('#modal');
 
 function ajaxRequest(params) {
   var url = '../data/json/icons.json';
@@ -71,6 +75,7 @@ function ajaxRequest(params) {
   params.success(getIcons(data));
   });
 }
+
 
 // Format 
 function indexFormatter(index, row) {
@@ -89,21 +94,50 @@ function clFormatter(index, row) {
 function termsFormatter(index, row) {
 var terms = row.terms.map(term => `<span class="badge badge-success">${term}</span>`).join(' ');
 return `<div style='height: 50px' class='mh-25 overflow-auto'>${terms}</div>`;
-}     
+}
 
 // Events
+function buttonFormatter(index, row) {
+return `<button type="button" class="btn btn-primary px-3"><i class="fab fa-android" aria-hidden="true"></i></button>`;
+}
+
 
 $(function() {
-  $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function (e, name, args) {
-  var selects = 
-  $table.bootstrapTable('getAllSelections');
-  var sspan = $submit.find("> span");
 
-  // select button
-  $submit.prop('disabled', !selects.length);
-  (selects.length > 0) ? 
-  sspan.text(selects.length) : sspan.empty();
-  })
+$table.on('click-cell.bs.table', function (e, name, args, $element) {
+if (name == "button") {
+ $element.name
+  }
 })
 
+window.operateEvents = {
+'click button': 
+function (e, value, row, index) {
+console.log($(this).prop());
+      }
+}
+  
+$table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function (e, name, args) {
+
+var selects = 
+$table.bootstrapTable('getAllSelections');
+var sspan = $submit.find("> span");
+
+// select button
+$submit.prop('disabled', !selects.length);
+(selects.length > 0) ? 
+sspan.text(selects.length) : sspan.empty();
+})
+
+function SelectIcons() {
+  var selects =   
+    $table.bootstrapTable('getAllSelections');
+  console.log(selects);
+}
+
+  $update.on("click", function () {
+  $table.bootstrapTable('checkBy', {field: 'index', values: [1, 2, 3]}
+  );
+  });
+})
 </script>

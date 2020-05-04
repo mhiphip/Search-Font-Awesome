@@ -1,7 +1,3 @@
-.navbar.navbar-3 .navbar-toggler-icon {
-background-image: url('https://mdbootstrap.com/img/svg/hamburger1.svg?color=#ffbb33');
-}
-
 .accordion.accordion-3 {
 border-radius: 3px; }
 .accordion.accordion-3 p {
@@ -10,9 +6,5 @@ font-size: 1rem; }
 margin-top: -10px; }
 
 .accordion .animated-icon1 span {
-background: #F44336;
-}
-
-.page-item page-pre {
 background: #F44336;
 }
