@@ -51,7 +51,29 @@ function GetIcons($this) {
 return $this.find('a[data-type="icon"]');
 }
 
-// Color funcs
+/** Review Funcs **/
+function CreatePopup($icon, $el) {
+var html = $('#popover').data().temp;
+
+    $el.popover({
+    title: function() {
+    return $(this).attr("id");
+    },
+    content: function() {
+    return Mustache.render(html, $icon);
+    },
+    template: `<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body" data-target="${$icon.id}"></div></div>`,
+    html: true,
+    selector: true,
+    container: "body",
+    sanitize: false,
+    trigger: 'click',
+    placement: 'bottom'
+    });
+
+}
+
+/** Color Funcs **/
 function ColorForm() {
 var $cpformat = $('#cpformat');
 var $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]},{"name":"Scheme", "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
@@ -95,8 +117,9 @@ $cps.colorpicker({format: data.format,
 extensions: [{name: 'swatches', options: {colors: data.values, namesAsValues: false}}]});
 }
 
-// Temp helpers
 
+
+// Temp helpers
 function httpRq(data) {
 var http = new XMLHttpRequest();
 http.onreadystatechange = function() {

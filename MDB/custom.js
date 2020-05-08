@@ -71,6 +71,8 @@ $dpms.attr("data-target", "#review");
 
 $dpms.on("click", function () {
 var data = $(this).data();
+$dpms.removeClass("active");
+$(this).addClass("active");
 IconActions(data);
 });
 
@@ -100,7 +102,7 @@ $nricons.each(function() {$(this).attr("id", _.uniqueId('icon_'))});
 
 
 // format popover
-$nricons.removeClass("btn-light").addClass("animated bounceInLeft");
+$nricons.removeClass("btn-light").toggleClass("animated bounceInLeft");
 $nricons.attr("data-toggle", "popover"); $nricons.find("i").removeClass("fa-2x").addClass("fa-3x");
 
 // add data
@@ -110,6 +112,9 @@ var icon = $ticons.find(ic => ic.name == $this.data("name"));
 
 if (icon != undefined) {
 $this.data(icon);
+icon.detail = detailFormatter(icon.index, icon);
+icon.id = $this.attr("id");
+icon.color = dcolors;
 CreatePopup(icon, $this);
 }
 });
@@ -207,32 +212,6 @@ $(`#${input}`).prop("hidden",false).show("slow");
  input;
 }).hide("slow");
   
-}
-
-function CreatePopup($icon, $el) {
-var html = $popov.data().temp;
-dcolors.forEach(dc => 
-dc.value = (dc.label == "Front") ? "#fff" : "transparent");
-
-$icon.detail = detailFormatter($icon.index, $icon);
-$icon.id = $el.attr("id");
-$icon.color = dcolors; 
-    $el.popover({
-    title: function() {
-    return $(this).attr("id");
-    },
-    content: function() {
-    return Mustache.render(html, $icon);
-    },
-    template: `<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body" data-target="${$icon.id}"></div></div>`,
-    html: true,
-    selector: true,
-    container: "body",
-    sanitize: false,
-    trigger: 'click',
-    placement: 'bottom'
-    });
-
 }
 
 function UpdateToolbars() {
