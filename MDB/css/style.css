@@ -2,6 +2,10 @@
 background-image: url('https://mdbootstrap.com/img/svg/hamburger1.svg?color=#ffbb33');
 }
 
+body {
+background: rgba(0, 150, 136, 0.1) ;
+}
+
 .accordion.accordion-3 {
 border-radius: 3px; }
 .accordion.accordion-3 p {
@@ -15,4 +19,33 @@ background: #F44336;
 
 .page-item page-pre {
 background: #F44336;
+}
+
+
+.intb {
+height: 50px;
+max-width:100%; 
+word-wrap: break-word; 
+overflow: auto;
+}
+
+.incv {
+}
+
+code {
+color: #0099CC;
+}
+
+.dropdown .dropdown-menu .dropdown-item:active {
+background: rgba(156, 39, 176, 0.1);
+}
+        
+.nav-pills .nav-link.active,
+.nav-pills .show {
+  background: rgba(156, 39, 176, 0.1);
+}
+
+.nav-link {
+  font-weight: bold;
+  color: rgba(156, 39, 176, 0.7);
 }

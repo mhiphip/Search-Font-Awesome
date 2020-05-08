@@ -1,0 +1,8 @@
+{
+  "icon": "<a tabindex=\"0\" role=\"button\" class=\"btn btn-light px-2\" data-type=\"icon\" data-trigger=\"click focus\" data-name=\"{{name}}\" style=\"background-color:#FFFFFF; color: black;\"><i class='{{prefix}} fa-{{name}}  fa-2x fa-fw'></i></a>",
+  "terms": "{{#terms}}<a class=\"badge rgba-blue-light dark-text shadow-none\">{{.}}</a> {{/terms}}",
+  "dom": "{{#escape}}<i class='{{&prefix}} fa-{{&name}}'></i>{{/escape}}",
+  "detail": "{{#detail}}\n{{key}}: {{&value}}</br>\n{{/detail}}",
+  "prefixes": "{{#prefixes}}\n{{style}} ({{prefix}})\n{{/prefixes}}",
+  "unicode": "<code>{{unicode}}</code>"
+}

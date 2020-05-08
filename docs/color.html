@@ -18,7 +18,7 @@ var $cpformat = $('#cpformat');
 var $formatsub = $('#formatsub');
 var $def = {input: 'default', scheme: '', format: 'rgb'};
 
-var $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]},{"name":"Scheme", "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
+pvar $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]},{"name":"Scheme", "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
 
 $.get('data/template.json',
   function (temp) {
@@ -41,7 +41,6 @@ $.get('data/template.json',
 </div>
 
 <script>
-console.log($('#result').html());
 // color picker
 var $cpinput = $('#cpinput');
 var $cpinputs = $("div[id^='cp']");
@@ -92,6 +91,7 @@ GetInput($def.input);
 });
 
 function GetInput(input) {
+var $dcolors = [{id: "cpfront", label: "Frontground", color: "grey", value: "#888"}, {id: "cpback", label: "Background", color: "transparent", value: "transparent"}];
 var $data = $cpinput.data();
 
 if (input == "random") {

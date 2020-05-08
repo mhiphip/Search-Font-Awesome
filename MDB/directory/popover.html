@@ -1,7 +1,36 @@
-<div class="popover" role="tooltip"><div class="arrow"></div>
-<h3 class="popover-header bg-default"></h3>
-<div class="popover-body">
-    <p>Click the "Save" button and check the results by pasting the clipboard in some place.</p>
-    <button id="color-picker-5" class="btn btn-primary btn-sm">Color Picker</button>
+<div>
+<div class="nav nav-tabs md-tabs" role="tablist">
+<a class="nav-item nav-link active" id="nav-detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria selected="true">Detail</a>
+<a class="nav-item nav-link" id="nav-color-tab" data-toggle="tab" href="#color" role="tab" aria-controls="nav-color" aria-selected="false">Color</a>
+</div>
+    
+  <div id="cp_front" class="input-group mb-1">
+    <input type="text" class="form-control input-sm" value="#305AA2"/>
+    <span class="input-group-append">
+    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+    </span>
+  </div>
+  
+  <div id="cp_back" class="input-group mb-1">
+  <input type="text" class="form-control input-sm" value="#305AA2"/>
+  <span class="input-group-append">
+  <span class="input-group-text colorpicker-input-addon"><i></i></span>
+  </span>
+  </div>
+  
+  <div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <button class="btn btn-primary btn-md m-0 px-3 py-2 z-depth-0 dropdown-toggle" type="button"
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#">Action</a>
+      <a class="dropdown-item" href="#">Another action</a>
+      <a class="dropdown-item" href="#">Something else here</a>
+      <div role="separator" class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#">Separated link</a>
+    </div>
+  </div>
+  <input type="text" class="form-control" aria-label="Text input with dropdown button">
+</div>
 </div>
 </div>

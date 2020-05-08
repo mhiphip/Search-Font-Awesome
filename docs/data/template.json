@@ -10,4 +10,3 @@
   },
   "icons": "{{#icons}}\n<span class=\"border border-black\">\n<i class='{{prefix}} fa-{{name}}'></i>\n</span>\n{{/icons}}"
 }
-

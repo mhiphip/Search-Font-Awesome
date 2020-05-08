@@ -1,0 +1,39 @@
+<ul data-target="#{{id}}" class="nav nav-pills mb-2" id="navlist" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="{{id}}-color-tab" data-toggle="pill" href="#{{id}}-color" role="tab" aria-controls="{{id}}-color" aria-selected="true">Color</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="{{id}}-detail-tab" data-toggle="pill" href="#{{id}}-detail" role="tab" aria-controls="{{id}}-detail" aria-selected="false">Detail</a>
+  </li>
+</ul>
+
+<div data-target="#{{id}}" class="tab-content" id="navCont">
+
+<div class="tab-pane fade show active" id="{{id}}-color" role="tabpanel" aria-labelledby="{{id}}-color-tab">
+
+{{#color}}
+<div id="{{id}}" data-type="{{label}}" class="input-group mb-3">
+    <div class="input-group-prepend">
+      <button aria-labelledby="#{{id}}-{{label}}" class="btn btn-md rgba-purple-strong m-0 px-3 py-2 z-depth-0 dropdown-toggle waves-effect" type="button" data-toggle="dropdown">{{label}}</button>
+      <div aria-labelledby="#{{id}}-{{label}}" class="dropdown-menu">
+      </div>
+    </div>
+    <input type="text" class="form-control input-sm" data-input="color" data-label="{{label}}" value=""/>
+    <span class="input-group-append">
+    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+    </span>
+</div>
+{{/color}}
+</div>
+
+<div class="tab-pane fade" id="{{id}}-detail" role="tabpanel" aria-labelledby="{{id}}-detail-tab">
+{{{detail}}}
+</div>
+
+<div data-type="toolbar" class="btn-group btn-group-sm float-right" role="group" aria-label="pop-tb">
+<a data-input="delete" class="btn text-warning z-depth-0"><i class="fas fa-trash-alt fa-lg fa-fw"></i></a>
+<a data-input="copy" class="btn text-warning z-depth-0"><i class="fas fa-copy fa-lg fa-fw"></i></a>
+</div>
+
+</div>
+</div>
