@@ -5,5 +5,5 @@
   "detail": "{{#detail}}\n{{key}}: {{&value}}</br>\n{{/detail}}",
   "prefixes": "{{#prefixes}}\n{{style}} ({{prefix}})\n{{/prefixes}}",
   "unicode": "<code>{{unicode}}</code>",
-  "pills": "{{#values}}<a class=\"badge badge-pill mr-1 mb-1\" data-color=\"{{.}}\" style=\"background: {{.}};\">{{.}}</a>{{/values}}"
+  "pills": "{{#values}}<a class=\"badge mr-1 mb-1 waves-effect\" herf=\"#\" value=\"{{.}}\" style=\"background: {{.}};\">{{.}}</a>{{/values}}"
 }

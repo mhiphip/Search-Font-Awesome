@@ -9,6 +9,7 @@
     "div": "{{#data}}\n<label for='{{id}}'>{{label}}</label>\n<div id='{{id}}' class='input-group mb-2 mr-sm-2'>\n<span class='input-group-prepend'>\n  <button class='btn btn-outline-dark dropdown-toggle' type='button' data-toggle='dropdown'>Input</button>\n  <span id='{{id}}_ip' class='dropdown-menu'>\n  </span>\n</span>\n  <input id='{{id}}_text' type='text' class='form-control input-sm' value='{{value}}'/>\n  <span class='input-group-append'>\n  <span class='input-group-text colorpicker-input-addon'><i></i></span>\n  </span>\n</div>\n{{/data}}"
   },
   "icons": "{{#icons}}\n<span class=\"border border-black\">\n<i class='{{prefix}} fa-{{name}}'></i>\n</span>\n{{/icons}}",
-  "btndp": "{{#list}}\n{{#header}} <h5 class=\"dropdown-header\">\n{{#icon}}<span class='fas fa-{{icon}}'></span>{{/icon}} {{value}}</h5>\n{{/header}}\n{{^header}}\n<a class=\"dropdown-item\" data-input=\"{{input}}\"> {{#icon}}<span class='fas fa-{{icon}}'></span> {{/icon}}{{value}}</a>\n{{/header}}\n{{/list}}",
-  "pills": "{{#values}}\n<a class=\"badge badge-pill\" style=\"background: {{.}};\">{{.}}</a>\n{{/values}}"
+  "btndp": "{{#list}}\n{{#header}} <h5 class=\"dropdown-header\">\n{{#icon}}<span class='fas fa-{{icon}}'></span>{{/icon}} {{value}}</h5>\n{{/header}}\n{{^header}}\n<a class=\"dropdown-item\" data-input=\"{{input}}\" value=\"{{value}}\"> {{#icon}}<span class='fas fa-{{icon}}'></span> {{/icon}}{{value}}</a>\n{{/header}}\n{{/list}}",
+  "pills": "{{#values}}\n<a class=\"badge badge-pill\" style=\"background-color: {{.}}; color: {{check}}\">{{.}}</a>\n{{/values}}",
+  "cpbtns": "{{#data}}\n<div class=\"btn-group\">\n  <button class=\"btn btn-dark btn-sm dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{label}}</button>\n<div data-label=\"{{label}}\" class=\"dropdown-menu\">\n</div>\n</div>\n{{/data}}"
 }

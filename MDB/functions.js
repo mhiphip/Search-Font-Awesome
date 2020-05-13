@@ -10,7 +10,7 @@ return args.reduce((obj, level) => obj && obj[level], obj);
 function getIcons(data) {
 var styles = [{"style":"solid","prefix":"fas"},{"style":"regular","prefix":"far"},{"style":"brands","prefix":"fab"}];
 var values = _.pairs(data).reduce((acc, [fk, fv], i) => (
-acc[i] = {index: i, name: fk, label: fv.label, unicode: fv.unicode, styles: fv.styles, prefixes: styles.filter(it => fv.styles.includes(it.style)), terms: fv.search.terms}, 
+acc[i] = {index: i, name: fk, label: fv.label, unicode: fv.unicode, styles: fv.styles, prefixes: styles.filter(it => fv.styles.includes(it.style)), terms: fv.search.terms, svg: _.values(fv.svg)[0].raw}, 
 acc[i].prefix = acc[i].prefixes[0].prefix, 
 acc), []);
 return values;
@@ -36,7 +36,7 @@ return value;
 }
 
 function detailFormatter(index, row) {
-var keys = ["unicode","prefixes", "terms", "dom"];
+var keys = ["name","unicode","prefixes","terms", "dom"];
 keys.forEach((k,i) => keys[i] = {key: k, value: RenderTemp(k, row)});
 row.detail = RenderTemp("detail", {detail: keys});
 return row.detail;
@@ -74,20 +74,43 @@ var html = $('#popover').data().temp;
 }
 
 /** Color Funcs **/
-function ColorForm() {
+function ColorForm(dcolors) {
+var $review = $('#review');
 var $color = $('#color');
+var $cpbtns = $('#cpbtns');
 var $cpformat = $('#cpformat');
 var $cpip = $("#cpinput");
+var dps =  [{input: "color", icon: "arrows-alt-h", value: "Spread"}, {input: "color", icon: "mouse-pointer", value: "Pick"}, {input: "color", icon: "stop", value: "Transparent"}];
 
 var $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]},{"name":"Scheme", "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
-GetTemp(["select"], $data,
-  function(render) {
+
+GetTemp("select", $data, function(render) {
   $cpformat.html(render);
-  var format = {format: "rgb", values :
-  ["#fff","#000"]};
+  var format = {format: "rgb", values:
+  ["#ffffff","#000000"]};
   var pills = RenderTemp("pills", format);
   $cpip.html(pills);
+});
+
+GetTemp("cpbtns", {data: dcolors}, 
+function(render) {
+  $cpbtns.html(render);
+  var dp = $cpbtns.find(".dropdown-menu");
+  
+  GetTemp("btndp", {list: dps}, 
+  function(brender) {
+  dp.html(brender);
+  dp.find("a").on("click", function () {
+  var link = $(this);
+  link.attr("data-label", 
+  link.parent().attr("data-label"));
+  link.attr("data-value",
+  link.attr("value"));
+  $review.trigger("format-all",
+  [link.data(), link]);
   });
+  });
+});
 }
 
 function ColorFormat($color) {
@@ -95,6 +118,7 @@ var $ips = $color.find("select");
 var $cpip = $("#cpinput");
 var values = [];
 var ob = {};
+
   $ips.each(function() {
   var ip = $(this).attr("id");
   ob[ip] = $(this).val();
@@ -120,18 +144,36 @@ function ColorInput(format, callback) {
   }
 
   if (format.input == "default") {
-  var $dcolors = [{id: "cpfront", label: "Front", color: "black", value: "#000"}, {id: "cpback", label: "Back", color: "transparent", value: "#fff"}];
-  format.values = $dcolors.map(dc => dc.value);
+  format.values = ["#ffffff","#000000"];
   callback(format);
   }
 }
 
 function AddCps(data, $cps) {
-$cps.colorpicker({format: data.format,
-extensions: [{name: 'swatches', options: {colors: data.values, namesAsValues: false}}]});
+var temp = `<div class="colorpicker"><div class="colorpicker-saturation"><i class="colorpicker-guide"></i></div><div class="colorpicker-hue"><i class="colorpicker-guide"></i></div><div class="colorpicker-alpha"><div class="colorpicker-alpha-color"></div><i class="colorpicker-guide"></i></div><div class="colorpicker-bar">
+<div class="input-group content-justify-center" id="swatches">
+<button class="btn btn-sm m-0 z-depth-0 waves-effect" type="button"></button>
+</div>
+</div></div>`;
+
+$cps.colorpicker({format: data.format, container: true, template: temp}).on('colorpickerCreate',function (e) {
+var swatch = e.colorpicker.element.find("#swatches");
+var btn = swatch.children().first();
+swatch.empty();
+  data.values.forEach(vl => {
+  nbtn = btn.clone();
+  nbtn.attr("value", vl);
+  nbtn.css("background-color", vl);
+  swatch.append(nbtn);
+  });
+
+  swatch.children().on('click', 
+  function () {
+  e.colorpicker.setValue($(this).val());
+  });
+});
+
 }
-
-
 
 // Temp helpers
 function httpRq(data) {
@@ -148,8 +190,7 @@ http.send(JSON.stringify(data.data));
 function RenderTemp(temp, data, partial) {
 var tdata = $('#template').data("table");
 partial = (partial != undefined) ? (_.pick(tdata, partial)) : undefined;
-
-var res = Mustache.render(tdata[temp], data, partial);
+var res = (tdata[temp] != undefined) ? Mustache.render(tdata[temp], data, partial) : data[temp];
 return res;
 }
 

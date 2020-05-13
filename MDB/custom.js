@@ -7,6 +7,7 @@ var $color = $('#color');
 var $tdom = $('#template');
 var $popov = $('#popover');
 var dcolors = [{id: "cpfront", label: "Front", css: "color"}, {id: "cpback", label: "Back", css: "background-color"}];
+var css = _.pluck(dcolors, "css");
 
 $.get("data/json/template 2.json", function(temp) { 
 $tdom.data({table: temp});
@@ -16,9 +17,9 @@ $.get("directory/popover-2.html", function(html) {
 $popov.data({temp: html});
 });
 
-ColorForm();
+ColorForm(dcolors);
 
-var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"input":"content"},{"icon":"fill-drip","value":"Color","actions":["Arrange","Format"],"input":"color"},{"icon":"trash","value":" Delete","input":" delete"},{"icon":"download","value":"Export","input":"export"}];
+var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"input":"content"},{"icon":"fill-drip","value":"Color","actions":["Arrange","Format"],"input":"color"},{"icon":"trash","value":" Delete","input":"delete"},{"icon":"download","value":"Export","input":"export"}];
 
 var data = {id: "#getIcons", list: mdata};
 GetTemp("btndp", data, function(render) {
@@ -30,9 +31,7 @@ dp.html(render);
 $content.load("/directory/icons-2.html", 
 function () {
 var $table = $('#table');
-$table.on('check.bs.table', function (row, $element) {
-var index = $element.index;
-});
+
 
 // table events
 // toggle view (change class)
@@ -56,12 +55,117 @@ UpdateToolbars();
 
 /** color button **/
 $color.find("button").on("click", function (event) {
+var target = $(this).attr("data-target");
 var $cpip = $("#cpinput");
+
+if (target == "input") {
 var format = ColorFormat($color);
+if (format.input == "names") {
+$("#modal").load("color-table.html", function (html) {
+var modal = $("#color-modal");
+var colortable = $("#color-table");
+modal.modal('show');
+$colortable.bootstrapTable();
+});
+}
+
   ColorInput(format, function(res) {
   var pills = RenderTemp("pills", res);
-  $cpip.html(pills);
+  $cpip.html(pills).trigger("load");
   });
+}
+});
+
+$("#cpinput").on("load", function (event) {
+var $cpinput = $(this);
+var $links = $(this).find("a");
+$links.on("click", function (event) {
+$(this).toggleClass("active");
+$links.find("span").remove();
+var acs = $cpinput.find(".active");
+acs.append("<span class='fas fa-check'><span>");
+});
+
+});
+  
+$review.on("format-all", function(event, input, el) {
+var $this = $(this);
+var $cpip = $("#cpinput");
+var $export = $("#export");
+var $extres = $("#export-result");
+var format = ColorFormat($color);
+var colors = format.values;
+var icons = $review.find("a");
+
+if (input.input == "color") {
+  if (input.value == "Spread") {
+  var dc = _.find(dcolors, {label:  input.label});
+  var dfc = css.find(c => c != dc.css);
+    icons.each(function () {
+    var dfi = $(this).css(dfc);
+    colors = colors.filter(cl => cl != dfi & cl != $(this).css(dc.css));
+    var ind = _.random(-1, colors.length);
+    color = colors[ind];
+    $(this).css(dc.css, color);
+    });
+  }
+
+  if (input.value == "Pick") {
+  var dc = _.find(dcolors, {label:  input.label});
+  var dfc = css.find(c => c != dc.css);
+  colors = [];
+  $cpip.find(".active").each(function() {
+  colors.push($(this).attr("value"));
+  });
+  icons.css(dc.css, colors[0]);
+  }
+
+  if (input.value == "Transparent") {
+  var dc = _.find(dcolors, {label:  input.label});
+  icons.css(dc.css, "#ffffff");
+  }
+}
+
+if (input.input == "delete") {
+icons.toggleClass("animted bounceOutUp");
+icons.remove();
+ArrangeSecs("content");
+UpdateToolbars();
+}
+
+if (input.input == "export") {
+var $svgs = $export.find("#svgs");
+
+icons.each(function () {
+  $svgs.empty();
+  var icon = $(this);
+  var svg = icon.data("svg");
+  $svgs.html(svg);
+  var last = $export.find("svg").last();
+  var path = last.find("path");
+  last.attr("data-id", icon.attr("id"));
+  last.attr("data-background", icon.css("background-color"));
+  path.attr("fill", icon.css("color"));
+  last.attr("viewBox", "0 0 512 512");
+  last.attr("width", "512");
+  last.attr("heigth", "512");
+  icon.data("svg", $svgs.html());
+});
+
+var $data = [];
+icons.each(function (e) {
+var data = $(this).data();
+var keys = ["name","unicode","prefixes","terms", "dom","svg"];
+var obj = keys.reduce((acc, k) => (acc[k] = data[k], acc), {});
+$data.push(obj);
+});
+
+$extres.load("directory/result.html", function (html) {
+var $result = $("#result");
+$result.text(JSON.stringify($data));
+});
+}
+
 });
 
 // review icons
@@ -75,13 +179,17 @@ UpdateToolbars();
 /** Icon Events **/
 var $gIc = $('#getIcons');
 var $dpms = $gIc.next().children();
-$dpms.attr("data-target", "#review");
 
-$dpms.on("click", function () {
-var data = $(this).data();
-$dpms.removeClass("active");
-$(this).addClass("active");
-ArrangeSecs(data.input);
+$dpms.each(function () {
+  $(this).on("click", function () {
+  var link = $(this);
+  var data = link.data();
+  $dpms.removeClass("active");
+  $(this).addClass("active");
+  ArrangeSecs(data.input);
+  $review.trigger("format-all", [data, link]);
+  });
+  });
 });
 
 /** load icons **/
@@ -94,8 +202,9 @@ var html2 = $popov.data().temp;
 
 // find new icons
 var $nricons = $ricons.not("[data-toggle]");
-$nricons.each(function() {$(this).attr("id", _.uniqueId('icon_'))});
-
+$nricons.each(function() {
+$(this).attr("id", _.uniqueId('icon_'));
+});
 
 // format popover
 $nricons.removeClass("btn-light").toggleClass("animated bounceInLeft");
@@ -130,33 +239,20 @@ dcolors.forEach(dc => dc.value = $this.css(dc.css));
 
 // popover childs
 var $cps = $div.find("[id^='cp']");
-var $fcolors = $div.find(".dropdown-menu");
 var $input = $div.find("[data-input='color']");        
 var $tbs = $div.find("[data-type='toolbar']");
 
 // add cp
 $input.each(function() {
-    var $input = $(this);
-    $input.attr("data-target", `#${id}`);
+    var input = $(this);
+    input.attr("data-target", `#${id}`);
     var dc = _.find(dcolors, {label: 
-    $input.attr("data-label")});
-    $input.val(dc.value).change();
+    input.attr("data-label")});
+    input.attr("value", dc.value);
 });
 
 var format = ColorFormat($color);
 AddCps(format, $cps);
-console.log(format);
-
-$fcolors.one("click", function(){
-var $fcolor = $(this);
-var data = $fcolor.data();
-var $input = $fcolor.find("input");
-
-// change input
-$fcolor.children().on("click", function(e) {
-    $input.val($(this).text()).change();
-    });
-});
 
 // input event
 $input.on("change", function () { FormatIcon($(this)); });
@@ -165,11 +261,9 @@ $input.on("change", function () { FormatIcon($(this)); });
 $tbs.find("a").each(function(e) {
     var $tb = $(this);
     $tb.attr("data-target", `#${id}`);
-    
     $tb.click(function () { 
     $tb.toggleClass("animated bounce");
     FormatIcon($tb); });
-});
 });
 });
 
@@ -182,7 +276,7 @@ var id = $input.attr("data-target");
 var $el = $(id);
 
   if (input == "color") {
-    var dc = _.find(dcolors, {label:  $input.attr("data-label")});
+  var dc = _.find(dcolors, {label:  $input.attr("data-label")});
     $el.css(dc.css, $input.val());
   }
     
@@ -198,18 +292,23 @@ var $el = $(id);
 
 function ArrangeSecs(input) {
 var $divs = $('.card > div');
+
 var $dids = [];
 $divs.each(function(index) {
 var div = {index: index, id: $(this).attr("id"), hidden: $(this).prop("hidden")};
 $dids.push(div);
 });
 
-$(`#${input}`).prop("hidden",false).show("slow");
+var ip = $dids.find(div => div.id == input);
+
+if (ip != undefined) {
+$(`#${input}`).prop("hidden", false).show("slow");
  $divs.filter(function(index) {
  return index > 1 & $(this).attr("id") !=
  input;
 }).hide("slow");
-  
+}
+
 }
 
 function UpdateToolbars() {
