@@ -75,40 +75,54 @@ var html = $('#popover').data().temp;
 
 /** Color Funcs **/
 function ColorForm() {
+var $color = $('#color');
 var $cpformat = $('#cpformat');
-var $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]},{"name":"Scheme", "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
-GetTemp(["select"], $data, function(render) {
-$cpformat.append(render);});
-}
+var $cpip = $("#cpinput");
 
+var $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]},{"name":"Scheme", "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
+GetTemp(["select"], $data,
+  function(render) {
+  $cpformat.html(render);
+  var format = {format: "rgb", values :
+  ["#fff","#000"]};
+  var pills = RenderTemp("pills", format);
+  $cpip.html(pills);
+  });
+}
 
 function ColorFormat($color) {
 var $ips = $color.find("select");
+var $cpip = $("#cpinput");
+var values = [];
 var ob = {};
   $ips.each(function() {
   var ip = $(this).attr("id");
   ob[ip] = $(this).val();
   });
+  
+  $cpip.find("a").each(function() {
+  values.push($(this).css("background-color"));
+});
+  ob.values = values;
 return ob;
 }
 
-function ColorInput(format, $cps) {
+function ColorInput(format, callback) {
   if (format.input == "random") {
-    var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'ui'}};
-    data.callback = function(data){
-  var values = data.result.map(value => RGBToHex(`rgb(${value})`));
-  console.log(format);
-  format.values = _.object(values, values);
-  AddCps(format, $cps);
+  console.log("random");
+  var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'ui'}};
+  data.callback = function(data){
+  console.log("Get Result");
+  format.values = data.result.map(value => RGBToHex(`rgb(${value})`));
+  callback(format);
   };
   httpRq(data);
   }
 
   if (format.input == "default") {
-  var $dcolors = [{id: "cpfront", label: "Front", color: "black", value: "#000"}, {id: "cpback", label: "Back", color: "transparent", value: "transparent"}];
-  var values = $dcolors.map(dc => dc.value);
-  format.values = _.object(values, values);
-  AddCps(format, $cps);
+  var $dcolors = [{id: "cpfront", label: "Front", color: "black", value: "#000"}, {id: "cpback", label: "Back", color: "transparent", value: "#fff"}];
+  format.values = $dcolors.map(dc => dc.value);
+  callback(format);
   }
 }
 
@@ -140,8 +154,10 @@ return res;
 }
 
 function GetTemp(tk, data, callback) {
- $.get("data/json/template.json", function(temp) {
- var render = Mustache.render(getNested(temp, tk), data);
+ $.get("data/json/template.json",
+ function(json) {
+ var temp = (_.isArray(tk)) ? getNested(json, tk) : json[tk];
+ var render = Mustache.render(temp, data);
   callback(render);
-    });
+});
 }

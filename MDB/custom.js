@@ -8,8 +8,6 @@ var $tdom = $('#template');
 var $popov = $('#popover');
 var dcolors = [{id: "cpfront", label: "Front", css: "color"}, {id: "cpback", label: "Back", css: "background-color"}];
 
-ColorForm();
-
 $.get("data/json/template 2.json", function(temp) { 
 $tdom.data({table: temp});
 });
@@ -18,13 +16,14 @@ $.get("directory/popover-2.html", function(html) {
 $popov.data({temp: html});
 });
 
+ColorForm();
+
 var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"input":"content"},{"icon":"fill-drip","value":"Color","actions":["Arrange","Format"],"input":"color"},{"icon":"trash","value":" Delete","input":" delete"},{"icon":"download","value":"Export","input":"export"}];
 
 var data = {id: "#getIcons", list: mdata};
-GetTemp(["btndp"], data, function(render) {
+GetTemp("btndp", data, function(render) {
 var dp = $(data.id).next();
 dp.html(render);
-
 });
 
 // Tables
@@ -55,6 +54,16 @@ $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.tab
 UpdateToolbars();
 });
 
+/** color button **/
+$color.find("button").on("click", function (event) {
+var $cpip = $("#cpinput");
+var format = ColorFormat($color);
+  ColorInput(format, function(res) {
+  var pills = RenderTemp("pills", res);
+  $cpip.html(pills);
+  });
+});
+
 // review icons
 $('#getReview').on("click", function () {
 $review.trigger("load.icons");
@@ -62,7 +71,6 @@ $table.bootstrapTable('refresh');
 $table.bootstrapTable('refresh');
 UpdateToolbars();
 });
-
 
 /** Icon Events **/
 var $gIc = $('#getIcons');
@@ -73,23 +81,11 @@ $dpms.on("click", function () {
 var data = $(this).data();
 $dpms.removeClass("active");
 $(this).addClass("active");
-IconActions(data);
+ArrangeSecs(data.input);
 });
 
-/** Icon Events (menu) **/
-function IconActions(data) {
-var $el = $(data.target);
-var input = data.input;
-var data = mdata.find(dt => dt.input == input);
-
-if (data.actions.includes("Arrange")) {
-ArrangeSecs(input);
-}
-
-}
-
 /** load icons **/
-$review.on("load.icons", function (event) {
+$review.on("load.icons", function(event) {
 var $ticons = getSelections();
 $review.append(_.pluck($ticons, "icon"));
 
@@ -137,7 +133,6 @@ var $cps = $div.find("[id^='cp']");
 var $fcolors = $div.find(".dropdown-menu");
 var $input = $div.find("[data-input='color']");        
 var $tbs = $div.find("[data-type='toolbar']");
-var format = ColorFormat($color);
 
 // add cp
 $input.each(function() {
@@ -147,7 +142,10 @@ $input.each(function() {
     $input.attr("data-label")});
     $input.val(dc.value).change();
 });
-ColorInput(format, $cps);
+
+var format = ColorFormat($color);
+AddCps(format, $cps);
+console.log(format);
 
 $fcolors.one("click", function(){
 var $fcolor = $(this);
