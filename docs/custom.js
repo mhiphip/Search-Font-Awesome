@@ -29,9 +29,9 @@ dp.html(render);
 
 // Tables
 $content.load("directory/icons-2.html", 
-function () {
+function (html) {
 var $table = $('#table');
-
+alert(html);
 
 // table events
 // toggle view (change class)
