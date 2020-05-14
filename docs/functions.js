@@ -133,6 +133,7 @@ return ob;
 
 function ColorInput(format, callback) {
   if (format.input == "random") {
+  alert(format.input);
   var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'ui'}};
 $.post(data.url,JSON.stringify(data.data), function(data,status,xhr) {
   alert(data.result);
