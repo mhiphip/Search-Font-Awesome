@@ -19,7 +19,7 @@ columns[i] = col;
 });
 
 var options = {
-url: '../data/json/icons.json',
+url: 'data/json/icons.json',
 responseHandler: function (data) {
 data = getIcons(data);
 return data;
