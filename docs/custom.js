@@ -98,20 +98,24 @@ var colors = format.values;
 var icons = $review.find("a");
 
 if (input.input == "color") {
+var dc = _.find(dcolors, {label:  input.label});
+  
   if (input.value == "Spread") {
-  var dc = _.find(dcolors, {label:  input.label});
-  var dfc = css.find(c => c != dc.css);
-    icons.each(function () {
-    var dfi = $(this).css(dfc);
-    colors = colors.filter(cl => cl != dfi & cl != $(this).css(dc.css));
-    var ind = _.random(-1, colors.length);
-    color = colors[ind];
-    $(this).css(dc.css, color);
-    });
+  icons.each(function (index) {
+  var icon = $(this);
+  var values = [];
+  dcolors.forEach(dc => 
+  values.push(icon.css(dc.css)));
+  var cls = colors.filter((cl,i) => 
+  !values.includes(cl));
+  var ind = _.random(0, cls.length - 1);
+  var cl = cls[ind];
+  console.log(cl, values, cls);
+  $(this).css(dc.css, cl);
+  });
   }
 
   if (input.value == "Pick") {
-  var dc = _.find(dcolors, {label:  input.label});
   var dfc = css.find(c => c != dc.css);
   colors = [];
   $cpip.find(".active").each(function() {
@@ -121,7 +125,6 @@ if (input.input == "color") {
   }
 
   if (input.value == "Transparent") {
-  var dc = _.find(dcolors, {label:  input.label});
   icons.css(dc.css, "#ffffff");
   }
 }

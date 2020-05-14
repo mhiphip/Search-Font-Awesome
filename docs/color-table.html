@@ -1,41 +1,22 @@
-<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
-<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
-<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
-
-<!-- submit -->
-<button id="select" type="button" class="btn btn-info" disabled>Select <span id="select_ln" class="badge badge-light"></span></button>
-
-<div id="modal">
-</div>
-
-<hr class="my-2">
-
-<div id="preview">
-</div>
-
-<script>
-
-</script>
-<!-- table toolbar -->
-<div id="toolbar">
-</div>
-
-<!-- Table -->
-<table
-  id="table"
-  data-toggle="table"
-  data-height="600"
-  data-auto-refresh="true"
-  data-url="data/colornames.bestof.json"
+<div id="color-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SelectedIcons">Selected Icons</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <!-- Table -->
+<table id="table-color"
+  data-url="data/json/colornames.bestof.json"
   data-pagination="true"
   data-page-size="50"
   data-pagination-v-align="bottom"
-  data-events="inputEvents"
   data-buttons-align="left"
   data-search-align="left"
   data-toolbar-align="right"
-  data-toolbar="#toolbar"
-  data-buttons-class="btn btn-outline-info"
   data-search="true"
   data-search-align="left"
   data-stickyHeader="true"
@@ -51,37 +32,16 @@
     </tr>
   </thead>
 </table>
-<script>
-var $table = $('#table');
-var $toolbar = $('#toolbar');
-var $select = $('#select');
+</div>
+</div>
+</div>
+</div>
 
-// Format
+<script>
 function hexFormatter(index, row) {
 return `<span class="badge badge-pill shadow-sm" style="background-color: ${row.hex}">${row.hex}</span>`;
 }
 
-  $(function() {
-  $table.bootstrapTable();
-$table.bootstrapTable('refreshOptions', { classes: "table table-hover" })
-});
-  
-// Events
-$table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-var selects = 
-$table.bootstrapTable('getAllSelections');
-// select button
-$select.prop('disabled', !selects.length);
-    (selects.length > 0) ? $select_ln.text(selects.length) :    $select_ln.empty();
-})
+var $colortable = $('#table-color');
 
-
-// modal
-$select.click(function () {
-     $modal.load('modal.html', function(html) {
-     var html = Mustache.render(html, {body: getSelect()});
-     $modal.html(html);
-     $('#selects').modal('show');
-     })
-})
 </script>
