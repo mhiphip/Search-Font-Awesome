@@ -69,7 +69,6 @@ $colortable.bootstrapTable();
 }
 
   ColorInput(format, function(res) {
-  alert(res);
   var pills = RenderTemp("pills", res);
   $cpip.html(pills).trigger("load");
   });
