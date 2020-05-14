@@ -92,7 +92,7 @@ acs.append("<span class='fas fa-check'><span>");
 $review.on("format-all", function(event, input, el) {
 var $this = $(this);
 var $cpip = $("#cpinput");
-var $export = $("#export");
+var $exp = $("#export");
 var $extres = $("#export-result");
 var format = ColorFormat($color);
 var colors = format.values;
@@ -111,7 +111,6 @@ var dc = _.find(dcolors, {label:  input.label});
   !values.includes(cl));
   var ind = _.random(0, cls.length - 1);
   var cl = cls[ind];
-  console.log(cl, values, cls);
   $(this).css(dc.css, cl);
   });
   }
@@ -138,22 +137,29 @@ UpdateToolbars();
 }
 
 if (input.input == "export") {
-var $svgs = $export.find("#svgs");
+var $svgs = $exp.find("#svgs");
+var $cvd = $("#canvas");
+var $cv = $cvd.find("canvas").first();
+$svgs.empty();
+$extres.empty();
 
 icons.each(function () {
-  $svgs.empty();
   var icon = $(this);
   var svg = icon.data("svg");
-  $svgs.html(svg);
-  var last = $export.find("svg").last();
+  $svgs.append(svg);
+  $cvd.append($cv.clone());
+  var last = $svgs.find("svg").last();
+  var canvas = $cvd.find("canvas").last();
+  var bg = icon.css("background-color");
+  last.attr("height", "512");
+  last.attr("width", "512");
   var path = last.find("path");
   last.attr("data-id", icon.attr("id"));
-  last.attr("data-background", icon.css("background-color"));
+  last.attr("data-background", bg);
   path.attr("fill", icon.css("color"));
-  last.attr("viewBox", "0 0 512 512");
-  last.attr("width", "512");
-  last.attr("heigth", "512");
-  icon.data("svg", $svgs.html());
+  var svgst = GetBase64(last.get(0));
+  var base64 = AppendtoCanvas(svgst, canvas.get(0), bg, $extres);
+  icon.data("base64", base64);
 });
 
 var $data = [];
@@ -164,10 +170,15 @@ var obj = keys.reduce((acc, k) => (acc[k] = data[k], acc), {});
 $data.push(obj);
 });
 
-$extres.load("directory/result.html", function (html) {
-var $result = $("#result");
-$result.text(JSON.stringify($data));
-});
+var click = el.attr("data-click");
+  if (click == undefined) {
+  el.attr("data-click", 1);
+  el.click();
+  }
+  else {
+  console.log(input);
+  console.log(click);
+  }
 }
 
 });

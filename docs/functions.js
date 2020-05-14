@@ -44,7 +44,7 @@ return row.detail;
       
 // Tables review functions
 function getSelections() { 
-return $table.bootstrapTable('getSelections');
+return $table.bootstrapTable('getAllSelections');
 }
 
 function GetIcons($this) { 
@@ -170,6 +170,37 @@ swatch.empty();
   e.colorpicker.setValue($(this).val());
   });
 });
+
+}
+
+function GetBase64(el) {
+var svgst = new XMLSerializer().serializeToString(el);
+var svg64 = window.btoa(svgst);
+var svgscr = "data:image/svg+xml;base64," + svg64;
+return svgscr;
+}
+
+function AppendtoCanvas(svgscr, canvas, bg, div) {
+var scr;
+var imageObj = new Image();
+imageObj.src = svgscr;
+canvas.width  = 600;
+canvas.height = 600;
+var context = canvas.getContext("2d");
+context.fillStyle = bg;
+context.fillRect(0, 0, canvas.width, canvas.height);
+context.drawImage(imageObj, 50, 50);
+console.log(imageObj.width, imageObj.height);
+
+setTimeout(function() { 
+var imageData = context.getImageData(0, 0, imageObj.width, imageObj.height);
+context.putImageData(imageData, 50, 50);
+}, 800);
+
+var image = new Image();
+image.src = canvas.toDataURL("image/png");
+div.append(image);
+return image.src;
 
 }
 
