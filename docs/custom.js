@@ -60,6 +60,7 @@ var $cpip = $("#cpinput");
 if (target == "input") {
 $cpip.html("loading...");
 var format = ColorFormat($color);
+
 if (format.input == "names") {
 $("#modal").load("color-table.html", function (html) {
 var modal = $("#color-modal");
