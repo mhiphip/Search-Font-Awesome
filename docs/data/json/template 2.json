@@ -5,5 +5,7 @@
   "detail": "{{#detail}}\n{{key}}: {{&value}}</br>\n{{/detail}}",
   "prefixes": "{{#prefixes}}\n{{style}} ({{prefix}})\n{{/prefixes}}",
   "unicode": "<code>{{unicode}}</code>",
-  "pills": "{{#values}}<a class=\"badge mr-1 mb-1 waves-effect\" herf=\"#\" value=\"{{.}}\" style=\"background: {{.}};\">{{.}}</a>{{/values}}"
+  "pills": "{{#values}}<a class=\"badge mr-1 mb-1 waves-effect\" herf=\"#\" value=\"{{.}}\" style=\"background: {{.}};\">{{.}}</a>{{/values}}",
+  "tbtoolbar": "{{#list}}<button type=\"button\" data-input=\"{{input}}\" id=\"{{input}}\" {{#toggle}}data-toggle=\"dropdown\"{{/toggle}}class=\"btn btn-sm rgba-indigo-strong  px-3 waves-effect\">{{#icon}}<span class='fas fa-{{icon}}'></span>{{/icon}}</button>{{#toggle}} <div class=\"dropdown-menu\" aria-labelledby=\"{{input}}\"></div>{{/toggle}}{{/list}}",
+  "dpmenu": " <label class=\"dropdown-item dropdown-item-marker\">\n<input type=\"checkbox\" class=\"toggle-all\"> <span>Toggle all</span></label>\n<div class=\"dropdown-divider\"></div>\n{{#list}}\n<label class=\"dropdown-item dropdown-item-marker\">\n<input type=\"checkbox\" data-field=\"{{field}}\" value=\"1\" {{#visible}} checked=\"checked\"{{/visible}}> <span>{{field}}</span></label>\n{{/list}}"
 }

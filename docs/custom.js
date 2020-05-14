@@ -31,8 +31,67 @@ dp.html(render);
 $content.load("directory/icons-2.html", 
 function (html) {
 var $table = $('#table');
+var $tbtbs = $('#tbtoolbar');
+var $search = $('#search');
+
+var list = [{input: "refresh", icon: "sync"}, {input: "toggleView", icon: "toggle-on"}, {input: "Columns", icon: "th-list", toggle: true}];
+var render = RenderTemp("tbtoolbar", {list: list});
+$tbtbs.html(render);
+      
+$tbtbs.find("button").on("click", function(e) {
+var $link = $(this);
+$table.trigger("format", [$link.data(), $link]);
+});
+
+$search.on("keyup", function(e) {
+var $ip = $(this);
+$table.trigger("format", [$ip.data(), $ip]);
+});
 
 // table events
+$table.on('format', function (e, data, el) {
+var input = data.input;
+ switch (input) {
+case "Columns":
+    var columns = GetOptions("Columns");
+    columns = columns.map(cl => _.pick(cl,
+    ["field", "visible"]));
+    var dp = 
+    el.parent().find(".dropdown-menu");
+    dp.html(RenderTemp("dpmenu", {list: 
+    columns}));
+    var ips = dp.find("input");
+ 
+    ips.on("change", function (e) {
+    var ip = $(this);
+    var data = ip.data();
+    var inputs = {all: ['showAllColumns', 'hideAllColumns'], field: ['showColumn', 'hideColumn']};
+    var values = (ip.hasClass("toggle-all")) ? inputs.all : inputs.field;
+    input = (ip.prop("checked")) ? 
+    values[0] : values[1];
+    $table.bootstrapTable(input, 
+    data.field);
+    });
+break;
+case "search":      $table.bootstrapTable('refreshOptions', {
+filterOptions: { filterAlgorithm: "or"}});
+
+var value = el.val().toLowerCase();
+var columns = GetOptions("Columns");
+columns = _.pluck(_.filter(columns, {searchable: true}), "field");
+var data = $table.bootstrapTable("getData");
+data = data.filter((it,i) => JSON.stringify(_.pick(it, columns)).indexOf(value) > -1);
+var ids = _.pluck(data, "name");
+$table.bootstrapTable('filterBy', {name: ids});
+console.log(options);
+break;
+default:
+$table.bootstrapTable(input);
+break;
+}
+
+});
+
 // toggle view (change class)
 $table.on('toggle.bs.table', function (e, cardView, args) {
 var $intb = $(".intb");

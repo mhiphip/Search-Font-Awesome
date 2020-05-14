@@ -47,6 +47,18 @@ function getSelections() {
 return $table.bootstrapTable('getAllSelections');
 }
 
+function GetOptions(type) {
+var data = $table.bootstrapTable('getOptions');
+if (type == "Columns") {
+var columns = data.columns[0];
+return columns;
+}
+if (type == undefined) {
+return data;
+}
+}
+
+
 function GetIcons($this) { 
 return $this.find('a[data-type="icon"]');
 }
@@ -219,7 +231,7 @@ http.send(JSON.stringify(data.data));
 function RenderTemp(temp, data, partial) {
 var tdata = $('#template').data("table");
 partial = (partial != undefined) ? (_.pick(tdata, partial)) : undefined;
-var res = (tdata[temp] != undefined) ? Mustache.render(tdata[temp], data, partial) : data[temp];
+var res = (tdata[temp] != undefined) ? Mustache.render(tdata[temp], data, partial) : tdata[temp];
 return res;
 }
 

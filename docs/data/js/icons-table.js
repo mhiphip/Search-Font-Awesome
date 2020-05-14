@@ -1,4 +1,5 @@
 var $table = $('#table');
+var $tbtbr = $('#tbtoolbar');
 
 var columns = [
 {field: "state", checkbox: true},
@@ -31,16 +32,9 @@ detailView: true,
 detailFormatter: "detailFormatter",
 classes: "table table-hover",
 theadClasses: "rgba-purple-strong dark-text",
+buttonsClass: "btn-sm rgba-indigo-strong  px-3 waves-effect",
 sortable: true,
-showRefresh: true,
-buttonsClass: "btn rgba-indigo-strong btn-sm px-3",
-buttonsAlign: "left",
-search: true,
-searchAlign: "left",
-showColumns: true,
-showToggle: true,
-showColumns: true,
-showColumnsToggleAll: true
+buttonsAlign: "center"
 }    
 
 // Events
