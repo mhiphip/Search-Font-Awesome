@@ -13,6 +13,7 @@ var values = _.pairs(data).reduce((acc, [fk, fv], i) => (
 acc[i] = {index: i, name: fk, label: fv.label, unicode: fv.unicode, styles: fv.styles, prefixes: styles.filter(it => fv.styles.includes(it.style)), terms: fv.search.terms, svg: _.values(fv.svg)[0].raw}, 
 acc[i].prefix = acc[i].prefixes[0].prefix, 
 acc), []);
+alert(values);
 return values;
 }
 
