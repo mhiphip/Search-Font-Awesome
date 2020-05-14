@@ -28,7 +28,7 @@ dp.html(render);
 });
 
 // Tables
-$content.load("/directory/icons-2.html", 
+$content.load("directory/icons-2.html", 
 function () {
 var $table = $('#table');
 
