@@ -136,6 +136,7 @@ function ColorInput(format, callback) {
   var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'ui'}};
   data.callback = function(data){
   format.values = data.result.map(value => RGBToHex(`rgb(${value})`));
+  alert(format);
   callback(format);
   };
   httpRq(data);
