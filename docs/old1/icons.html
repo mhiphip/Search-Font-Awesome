@@ -1,0 +1,91 @@
+<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/key-events/bootstrap-table-key-events.min.js"></script>
+
+<!-- submit -->
+<button id="submit" type="button" class="btn btn-danger" onclick="SubmitIcons()" disabled>Submit <span class="badge badge-light"></span></button>
+
+<!-- table toolbar -->
+<div id="toolbar">
+</div>
+
+<!-- Table -->
+<table
+  id="table"
+  data-toggle="table"
+  data-height="600"
+  data-auto-refresh="true"
+  data-ajax="ajaxRequest"
+  data-pagination="true"
+  data-page-size="50"
+  data-pagination-v-align="bottom"
+  data-buttons-align="left"
+  data-search-align="left"
+  data-toolbar-align="right"
+  data-toolbar="#toolbar"
+  data-buttons-class="btn btn-outline-primary"
+  data-search="true"
+  data-search-align="left"
+  data-stickyHeader="true"
+  data-click-to-select="true"
+  data-show-toggle="true"
+  data-show-fullscreen="true"
+  >
+  <thead class="thead-light">
+    <tr>
+      <th data-field="select" data-checkbox="true">select</th>
+     <th data-field="icon" data-formatter="iconFormatter" data-align="center">icon</th>
+     <th data-field="name" data-sortable="true">name</th>
+     <th data-field="label">label</th>
+     <th data-field="unicode">unicode</th>
+     <th data-field="class" data-formatter="clFormatter" data-escape="true">class</th>
+     <th data-field="prefixes">prefixes</th>
+     <th data-field="styles">styles</th>
+     <th data-field="terms" data-formatter="termsFormatter" data-width="60">terms</th>
+    </tr>
+  </thead>
+</table>
+<script>
+var $table = $('#table');
+var $toolbar = $('#toolbar');
+var $submit = $('#submit');
+var $selects = $('#selects');
+var $modal = $('#modal');
+
+function ajaxRequest(params) {
+var url = 'data/icons.json';
+$.get(url).then(function (data) {
+      params.success(getIcons(data));
+    });
+}
+
+// Format
+ function iconFormatter(index, row) {
+ return `<span class="badge badge-light">
+ <i class='${row.prefix()} fa-${row.name} fa-fw fa-3x'></i></span>`;
+}
+
+function clFormatter(index, row) {
+ return `<pre>${row.class()}</pre>`;
+}
+
+function termsFormatter(index, row) {
+var terms = row.terms.map(term => `<span class="badge badge-success">${term}</span>`).join(' ');
+return `<div style='height: 50px' class='mh-25 overflow-auto'>${terms}</div>`;
+}
+
+
+// Events
+$table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+    console.log($table.html());
+var selects = 
+$table.bootstrapTable('getAllSelections');
+var sspan = $submit.find("> span");
+
+// select button
+$submit.prop('disabled', !selects.length);
+(selects.length > 0) ? 
+sspan.text(selects.length) : sspan.empty();
+})
+
+</script>

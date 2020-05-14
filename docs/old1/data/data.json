@@ -1,0 +1,28 @@
+{
+  "info": {
+    "docs": "http://fontawesome.com/how-to-use",
+    "source": "https://github.com/FortAwesome/Font-Awesome"
+  },
+  "API": {
+    "url": "https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/metadata/icons.json",
+    "styles": {
+      "solid": "fas",
+      "regular": "far",
+      "brands": "fab"
+    },
+  "html": {
+    "scripts": {
+      "all": "https://use.fontawesome.com/releases/v5.13.0/js/all.js"
+    },
+    "elements": [
+      {
+        "name": "basic",
+        "template": "\n\\{{#icons}}\n<i class='\\{{prefix}} fa-\\{{name}}'></i>\n\\{{/icons}}\n"
+      },
+      {
+        "name": "list",
+        "template": "\n<ul class='fa-ul'>\n\\{{#icons}}\n <li><span class=\"fa-li\"><i class='\\{{prefix}} fa-\\{{name}}'></i></span></li>\n\\{{#icons}}\n</ul>\n"
+      }
+    ]
+  }
+}
