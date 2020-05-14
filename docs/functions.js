@@ -231,7 +231,8 @@ http.send(JSON.stringify(data.data));
 function RenderTemp(temp, data, partial) {
 var tdata = $('#template').data("table");
 partial = (partial != undefined) ? (_.pick(tdata, partial)) : undefined;
-var res = (tdata[temp] != undefined) ? Mustache.render(tdata[temp], data, partial) : tdata[temp];
+
+var res = (_.keys(tdata).includes(temp)) ? Mustache.render(tdata[temp], data, partial) : data[temp];
 return res;
 }
 

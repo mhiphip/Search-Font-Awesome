@@ -29,12 +29,12 @@ uniqueId: "name",
 columns: columns,
 clickToSelect: true,
 detailView: true,
+detailViewIcon: false,
 detailFormatter: "detailFormatter",
 classes: "table table-hover",
 theadClasses: "rgba-purple-strong dark-text",
 buttonsClass: "btn-sm rgba-indigo-strong  px-3 waves-effect",
-sortable: true,
-buttonsAlign: "center"
+sortable: true
 }    
 
 // Events

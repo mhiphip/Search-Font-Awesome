@@ -31,14 +31,15 @@ dp.html(render);
 $content.load("directory/icons-2.html", 
 function (html) {
 var $table = $('#table');
+var $tbformat = $('#tbformat');
 var $tbtbs = $('#tbtoolbar');
-var $search = $('#search');
+var $search = $('#tbsearch');
 
 var list = [{input: "refresh", icon: "sync"}, {input: "toggleView", icon: "toggle-on"}, {input: "Columns", icon: "th-list", toggle: true}];
 var render = RenderTemp("tbtoolbar", {list: list});
 $tbtbs.html(render);
       
-$tbtbs.find("button").on("click", function(e) {
+$tbformat.find("button").on("click", function(e) {
 var $link = $(this);
 $table.trigger("format", [$link.data(), $link]);
 });
@@ -48,10 +49,13 @@ var $ip = $(this);
 $table.trigger("format", [$ip.data(), $ip]);
 });
 
+
+/** content: table **/
 // table events
 $table.on('format', function (e, data, el) {
 var input = data.input;
- switch (input) {
+
+switch (input) {
 case "Columns":
     var columns = GetOptions("Columns");
     columns = columns.map(cl => _.pick(cl,
@@ -73,6 +77,7 @@ case "Columns":
     data.field);
     });
 break;
+
 case "search":      $table.bootstrapTable('refreshOptions', {
 filterOptions: { filterAlgorithm: "or"}});
 
@@ -85,6 +90,12 @@ var ids = _.pluck(data, "name");
 $table.bootstrapTable('filterBy', {name: ids});
 console.log(options);
 break;
+
+case "search-clear":
+$search.val("");
+console.log(input);
+break;
+
 default:
 $table.bootstrapTable(input);
 break;
