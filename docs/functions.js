@@ -133,11 +133,9 @@ return ob;
 
 function ColorInput(format, callback) {
   if (format.input == "random") {
-  alert(format.input);
   var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'ui'}};
 $.post(data.url,JSON.stringify(data.data), function(data,status,xhr){}, "json")
 .then(data => {
-  alert(data.result);
   format.values = data.result.map(value => RGBToHex(`rgb(${value})`));
   callback(format);
   })
