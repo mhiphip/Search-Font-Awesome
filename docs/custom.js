@@ -318,8 +318,7 @@ var tbact = $("[data-active=table-check]");
 var tbtxt = tbact.find("span");
 var icact = $("[data-active=icon-check]");
 var ictxt = icact.find("span");
-
-var selects = $table.bootstrapTable('getSelections');
+var selects = getSelections();
 
 (selects.length > 0) ? tbact.removeClass("disabled") : tbact.addClass("disabled");
 
