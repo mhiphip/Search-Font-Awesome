@@ -53,10 +53,6 @@ UpdateToolbars();
 });
 
 /** color button **/
-ColorInput({input: "random"}, function (res) {
-console.log(res);
-});
-
 $color.find("button").on("click", function (event) {
 var target = $(this).attr("data-target");
 var $cpip = $("#cpinput");

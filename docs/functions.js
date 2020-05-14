@@ -134,12 +134,11 @@ return ob;
 function ColorInput(format, callback) {
   if (format.input == "random") {
   var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'ui'}};
-  data.callback = function(data){
-  alert(data);
+$.post(data.url,JSON.stringify(data.data), function(data,status,xhr) {
+  console.log(data.result);
   format.values = data.result.map(value => RGBToHex(`rgb(${value})`));
   callback(format);
-  };
-  httpRq(data);
+  }, "json");
   }
 
   if (format.input == "default") {
