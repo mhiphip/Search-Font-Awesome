@@ -193,7 +193,7 @@ return res;
 }
 
 function GetTemp(tk, data, callback) {
- $.get("data/json/template.json",
+ $.get("https://mhiphip.github.io/Search-Font-Awesome/data/json/template.json",
  function(json) {
  var temp = (_.isArray(tk)) ? getNested(json, tk) : json[tk];
  var render = Mustache.render(temp, data);

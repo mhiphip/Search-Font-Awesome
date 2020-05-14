@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+<!-- Bootstrap core CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- Material Design Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css" rel="stylesheet">
+<!-- Your custom styles (optional) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Start your project here
+=================================-->  
+<div id="container" class="container mt-5">
+<div class="card">
+<!--Card image-->
+<div id="review" class="view text-center grey lighten-4 z-depth-1 order-1">
+</div>
+
+<!--Card image-->
+<!--buttons-->
+<div id="btn-actions" class="btn-group order-2">
+  <button id="getReview" type="button" class="btn btn-md rgba-blue-strong disabled" aria-haspopup="true" aria-expanded="false" data-active="table-check">
+  <span class="fas fa-angle-double-up fa-2x"></span>
+  </button>
+  <button id="getIcons" type="button" class="btn btn-md rgba-pink-strong disabled" data-toggle="dropdown" data-active="icon-check" aria-haspopup="true" aria-expanded="false"><span class="fas fa-image fa-2x"></span>
+  </button>
+    <div class="dropdown-menu" aria-labelledby="#getIcons">
+    </div>
+</div>
+
+    <!--body-->
+  <div id="content" class="card-body order-3">
+  </div>
+  
+  <div id="export" class="card-body order-3" hidden>
+  <div id="svgs" hidden>
+  </div>
+  <div id="export-result">
+  </div>
+  </div>
+  
+  <div id="color" class="card-body order-3" hidden>
+  
+  <div id="cpinput" class="form-row d-flex justify-content-center">
+  </div>
+  
+<div id="cpbtns" class="form-row d-flex justify-content-center" role="group">
+</div>
+
+<div id="cpformat" class="form-row"></div>
+</div>
+
+</div>
+  
+    <!--/.Card-->
+</div>
+
+<div id="template" class="hidden">
+</div>
+
+<div id="modal">
+</div>
+
+<div id="popover" class="hidden">
+  <div class="popover-body"></div>
+</div>
+
+<!--End your project here
+=================================-->
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/js/mdb.min.js"></script>
+
+<!-- Your custom scripts (optional) -->
+<!-- Helper -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/js/bootstrap-colorpicker.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="data/js/color_converters.js"></script>
+<script src="data/js/color-scheme.min.js"></script>
+
+<!-- Custom (local) -->
+<script>
+function onlyUnique(value, index, self) {
+return self.indexOf(value) === index;
+}
+
+function getNested(obj, args) {
+return args.reduce((obj, level) => obj && obj[level], obj);
+}
+
+// Table: data
+function getIcons(data) {
+var styles = [{"style":"solid","prefix":"fas"},{"style":"regular","prefix":"far"},{"style":"brands","prefix":"fab"}];
+var values = _.pairs(data).reduce((acc, [fk, fv], i) => (
+acc[i] = {index: i, name: fk, label: fv.label, unicode: fv.unicode, styles: fv.styles, prefixes: styles.filter(it => fv.styles.includes(it.style)), terms: fv.search.terms, svg: _.values(fv.svg)[0].raw}, 
+acc[i].prefix = acc[i].prefixes[0].prefix, 
+acc), []);
+return values;
+}
+
+// Table functions
+function RowFormatter(value, row, index, field) {
+var test = ["icon","unicode","prefixes","terms", "dom"].includes(field);
+
+row.escape = function() {
+    return function(text, render) {
+      return _.escape(render(text));
+    }
+}
+
+var value = (test) ? RenderTemp(field, row) :
+row[field];
+row[field] = (row[field] != undefined) ? row[field] : value;
+
+var wraps = {intb: "<div class='intb'>{{&value}}</div>"};
+value = (["terms", "prefixes", "dom"].includes(field)) ? Mustache.render(wraps.intb, {value: value}) : value;
+return value;
+}
+
+function detailFormatter(index, row) {
+var keys = ["name","unicode","prefixes","terms", "dom"];
+keys.forEach((k,i) => keys[i] = {key: k, value: RenderTemp(k, row)});
+row.detail = RenderTemp("detail", {detail: keys});
+return row.detail;
+}
+      
+// Tables review functions
+function getSelections() { 
+return $table.bootstrapTable('getSelections');
+}
+
+function GetIcons($this) { 
+return $this.find('a[data-type="icon"]');
+}
+
+/** Review Funcs **/
+function CreatePopup($icon, $el) {
+var html = $('#popover').data().temp;
+
+    $el.popover({
+    title: function() {
+    return $(this).attr("id");
+    },
+    content: function() {
+    return Mustache.render(html, $icon);
+    },
+    template: `<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body" data-target="${$icon.id}"></div></div>`,
+    html: true,
+    selector: true,
+    container: "body",
+    sanitize: false,
+    trigger: 'click',
+    placement: 'bottom'
+    });
+
+}
+
+/** Color Funcs **/
+function ColorForm(dcolors) {
+var $review = $('#review');
+var $color = $('#color');
+var $cpbtns = $('#cpbtns');
+var $cpformat = $('#cpformat');
+var $cpip = $("#cpinput");
+var dps =  [{input: "color", icon: "arrows-alt-h", value: "Spread"}, {input: "color", icon: "mouse-pointer", value: "Pick"}, {input: "color", icon: "stop", value: "Transparent"}];
+
+var $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]},{"name":"Scheme", "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
+
+GetTemp("select", $data, function(render) {
+  $cpformat.html(render);
+  var format = {format: "rgb", values:
+  ["#ffffff","#000000"]};
+  var pills = RenderTemp("pills", format);
+  $cpip.html(pills);
+});
+
+GetTemp("cpbtns", {data: dcolors}, 
+function(render) {
+  $cpbtns.html(render);
+  var dp = $cpbtns.find(".dropdown-menu");
+  
+  GetTemp("btndp", {list: dps}, 
+  function(brender) {
+  dp.html(brender);
+  dp.find("a").on("click", function () {
+  var link = $(this);
+  link.attr("data-label", 
+  link.parent().attr("data-label"));
+  link.attr("data-value",
+  link.attr("value"));
+  $review.trigger("format-all",
+  [link.data(), link]);
+  });
+  });
+});
+}
+
+function ColorFormat($color) {
+var $ips = $color.find("select");
+var $cpip = $("#cpinput");
+var values = [];
+var ob = {};
+
+  $ips.each(function() {
+  var ip = $(this).attr("id");
+  ob[ip] = $(this).val();
+  });
+  
+  $cpip.find("a").each(function() {
+  values.push($(this).css("background-color"));
+});
+  ob.values = values;
+return ob;
+}
+
+function ColorInput(format, callback) {
+  if (format.input == "random") {
+  var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'ui'}};
+$.post(data.url,JSON.stringify(data.data), function(data,status,xhr){}, "json")
+.then(data => {
+  format.values = data.result.map(value => RGBToHex(`rgb(${value})`));
+  callback(format);
+  })
+  }
+
+  if (format.input == "default") {
+  format.values = ["#ffffff","#000000"];
+  callback(format);
+  }
+}
+
+function AddCps(data, $cps) {
+var temp = `<div class="colorpicker"><div class="colorpicker-saturation"><i class="colorpicker-guide"></i></div><div class="colorpicker-hue"><i class="colorpicker-guide"></i></div><div class="colorpicker-alpha"><div class="colorpicker-alpha-color"></div><i class="colorpicker-guide"></i></div><div class="colorpicker-bar">
+<div class="input-group content-justify-center" id="swatches">
+<button class="btn btn-sm m-0 z-depth-0 waves-effect" type="button"></button>
+</div>
+</div></div>`;
+
+$cps.colorpicker({format: data.format, container: true, template: temp}).on('colorpickerCreate',function (e) {
+var swatch = e.colorpicker.element.find("#swatches");
+var btn = swatch.children().first();
+swatch.empty();
+  data.values.forEach(vl => {
+  nbtn = btn.clone();
+  nbtn.attr("value", vl);
+  nbtn.css("background-color", vl);
+  swatch.append(nbtn);
+  });
+
+  swatch.children().on('click', 
+  function () {
+  e.colorpicker.setValue($(this).val());
+  });
+});
+
+}
+
+// Temp helpers
+function httpRq(data) {
+var http = new XMLHttpRequest();
+http.onreadystatechange = function() {
+   if(http.readyState == 4 && http.status == 200) {
+    data.callback(JSON.parse(http.responseText));
+}
+}
+http.open(data.method, data.url, true);
+http.send(JSON.stringify(data.data));
+}
+
+function RenderTemp(temp, data, partial) {
+var tdata = $('#template').data("table");
+partial = (partial != undefined) ? (_.pick(tdata, partial)) : undefined;
+var res = (tdata[temp] != undefined) ? Mustache.render(tdata[temp], data, partial) : data[temp];
+return res;
+}
+
+function GetTemp(tk, data, callback) {
+ $.get("https://mhiphip.github.io/Search-Font-Awesome/data/json/template.json",
+ function(json) {
+ var temp = (_.isArray(tk)) ? getNested(json, tk) : json[tk];
+ var render = Mustache.render(temp, data);
+  callback(render);
+});
+}
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function () {
+var btns = ["getReview","getData","getIcons"];
+var $btntb =  $('#btn-actions');
+var $content = $('#content');
+var $review = $('#review');
+var $color = $('#color');
+var $tdom = $('#template');
+var $popov = $('#popover');
+var dcolors = [{id: "cpfront", label: "Front", css: "color"}, {id: "cpback", label: "Back", css: "background-color"}];
+var css = _.pluck(dcolors, "css");
+
+$.get("https://mhiphip.github.io/Search-Font-Awesome/data/json/template 2.json", function(temp) { 
+$tdom.data({table: temp});
+});
+
+$.get("https://mhiphip.github.io/Search-Font-Awesome/directory/popover-2.html", function(html) { 
+$popov.data({temp: html});
+});
+
+ColorForm(dcolors);
+
+var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"input":"content"},{"icon":"fill-drip","value":"Color","actions":["Arrange","Format"],"input":"color"},{"icon":"trash","value":" Delete","input":"delete"},{"icon":"download","value":"Export","input":"export"}];
+
+var data = {id: "#getIcons", list: mdata};
+GetTemp("btndp", data, function(render) {
+var dp = $(data.id).next();
+dp.html(render);
+});
+
+// Tables
+$content.load("https://mhiphip.github.io/Search-Font-Awesome/directory/icons-2.html", 
+function (html) {
+var $table = $('#table');
+
+// table events
+// toggle view (change class)
+$table.on('toggle.bs.table', function (e, cardView, args) {
+var $intb = $(".intb");
+var $incv = $(".incv");
+    if (cardView == true) {
+    $intb.removeClass("intb")
+        .addClass("incv");
+    }
+    
+    if (cardView == false) {
+    $incv.removeClass("incv")
+        .addClass("intb");
+    }
+});
+
+$table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function (e, name, args) {
+UpdateToolbars();
+});
+
+/** color button **/
+$color.find("button").on("click", function (event) {
+var target = $(this).attr("data-target");
+var $cpip = $("#cpinput");
+
+if (target == "input") {
+$cpip.html("loading...");
+var format = ColorFormat($color);
+
+if (format.input == "names") {
+$("#modal").load("color-table.html", function (html) {
+var modal = $("#color-modal");
+var colortable = $("#color-table");
+modal.modal('show');
+$colortable.bootstrapTable();
+});
+}
+  ColorInput(format, function(res) {
+  var pills = RenderTemp("pills", res);
+  $cpip.html(pills).trigger("load");
+  });
+}
+});
+
+
+$("#cpinput").on("load", function (event) {
+var $cpinput = $(this);
+var $links = $(this).find("a");
+$links.on("click", function (event) {
+$(this).toggleClass("active");
+$links.find("span").remove();
+var acs = $cpinput.find(".active");
+acs.append("<span class='fas fa-check'><span>");
+});
+
+});
+  
+$review.on("format-all", function(event, input, el) {
+var $this = $(this);
+var $cpip = $("#cpinput");
+var $export = $("#export");
+var $extres = $("#export-result");
+var format = ColorFormat($color);
+var colors = format.values;
+var icons = $review.find("a");
+
+if (input.input == "color") {
+var dc = _.find(dcolors, {label:  input.label});
+  
+  if (input.value == "Spread") {
+  icons.each(function (index) {
+  var icon = $(this);
+  var values = [];
+  dcolors.forEach(dc => 
+  values.push(icon.css(dc.css)));
+  var cls = colors.filter((cl,i) => 
+  !values.includes(cl));
+  var ind = _.random(0, cls.length - 1);
+  var cl = cls[ind];
+  console.log(cl, values, cls);
+  $(this).css(dc.css, cl);
+  });
+  }
+
+  if (input.value == "Pick") {
+  var dfc = css.find(c => c != dc.css);
+  colors = [];
+  $cpip.find(".active").each(function() {
+  colors.push($(this).attr("value"));
+  });
+  icons.css(dc.css, colors[0]);
+  }
+
+  if (input.value == "Transparent") {
+  icons.css(dc.css, "#ffffff");
+  }
+}
+
+if (input.input == "delete") {
+icons.toggleClass("animted bounceOutUp");
+icons.remove();
+ArrangeSecs("content");
+UpdateToolbars();
+}
+
+if (input.input == "export") {
+var $svgs = $export.find("#svgs");
+
+icons.each(function () {
+  $svgs.empty();
+  var icon = $(this);
+  var svg = icon.data("svg");
+  $svgs.html(svg);
+  var last = $export.find("svg").last();
+  var path = last.find("path");
+  last.attr("data-id", icon.attr("id"));
+  last.attr("data-background", icon.css("background-color"));
+  path.attr("fill", icon.css("color"));
+  last.attr("viewBox", "0 0 512 512");
+  last.attr("width", "512");
+  last.attr("heigth", "512");
+  icon.data("svg", $svgs.html());
+});
+
+var $data = [];
+icons.each(function (e) {
+var data = $(this).data();
+var keys = ["name","unicode","prefixes","terms", "dom","svg"];
+var obj = keys.reduce((acc, k) => (acc[k] = data[k], acc), {});
+$data.push(obj);
+});
+
+$extres.load("directory/result.html", function (html) {
+var $result = $("#result");
+$result.text(JSON.stringify($data));
+});
+}
+
+});
+
+// review icons
+$('#getReview').on("click", function () {
+$review.trigger("load.icons");
+$table.bootstrapTable('refresh');
+$table.bootstrapTable('refresh');
+UpdateToolbars();
+});
+
+/** Icon Events **/
+var $gIc = $('#getIcons');
+var $dpms = $gIc.next().children();
+
+$dpms.each(function () {
+  $(this).on("click", function () {
+  var link = $(this);
+  var data = link.data();
+  $dpms.removeClass("active");
+  $(this).addClass("active");
+  ArrangeSecs(data.input);
+  $review.trigger("format-all", [data, link]);
+  });
+  });
+});
+
+/** load icons **/
+$review.on("load.icons", function(event) {
+var $ticons = getSelections();
+$review.append(_.pluck($ticons, "icon"));
+
+var $ricons = GetIcons($(this));
+var html2 = $popov.data().temp;
+
+// find new icons
+var $nricons = $ricons.not("[data-toggle]");
+$nricons.each(function() {
+$(this).attr("id", _.uniqueId('icon_'));
+});
+
+// format popover
+$nricons.removeClass("btn-light").toggleClass("animated bounceInLeft");
+$nricons.attr("data-toggle", "popover"); $nricons.find("i").removeClass("fa-2x").addClass("fa-3x");
+
+// add data
+$nricons.each(function() {
+var $this = $(this);
+var icon = $ticons.find(ic => ic.name == $this.data("name"));
+
+if (icon != undefined) {
+$this.data(icon);
+icon.detail = detailFormatter(icon.index, icon);
+icon.id = $this.attr("id");
+icon.color = dcolors;
+CreatePopup(icon, $this);
+}
+});
+
+// ----
+$('[data-toggle="popover"]').on('inserted.bs.popover', function () {
+var $this = $(this); 
+var id = $this.attr("id");
+var $pops = $(".popover");
+var $div = $pops.find(`[data-target="${id}"]`);
+
+// toggle popover
+($pops.length > 1) ? $pops.first().popover("hide") : $pops;
+
+// find icon css
+dcolors.forEach(dc => dc.value = $this.css(dc.css));
+
+// popover childs
+var $cps = $div.find("[id^='cp']");
+var $input = $div.find("[data-input='color']");        
+var $tbs = $div.find("[data-type='toolbar']");
+
+// add cp
+$input.each(function() {
+    var input = $(this);
+    input.attr("data-target", `#${id}`);
+    var dc = _.find(dcolors, {label: 
+    input.attr("data-label")});
+    input.attr("value", dc.value);
+});
+
+var format = ColorFormat($color);
+AddCps(format, $cps);
+
+// input event
+$input.on("change", function () { FormatIcon($(this)); });
+
+// toolbar event
+$tbs.find("a").each(function(e) {
+    var $tb = $(this);
+    $tb.attr("data-target", `#${id}`);
+    $tb.click(function () { 
+    $tb.toggleClass("animated bounce");
+    FormatIcon($tb); });
+});
+});
+
+});
+
+
+function FormatIcon($input) {
+var input = $input.attr("data-input");
+var id = $input.attr("data-target");
+var $el = $(id);
+
+  if (input == "color") {
+  var dc = _.find(dcolors, {label:  $input.attr("data-label")});
+    $el.css(dc.css, $input.val());
+  }
+    
+  if (input == "delete") {
+    $el.popover("hide");
+    $el.toggleClass("animted bounceOutUp");
+    setTimeout(function() { 
+    $el.remove(); UpdateToolbars();
+    }, 800);
+  }
+}
+
+
+function ArrangeSecs(input) {
+var $divs = $('.card > div');
+
+var $dids = [];
+$divs.each(function(index) {
+var div = {index: index, id: $(this).attr("id"), hidden: $(this).prop("hidden")};
+$dids.push(div);
+});
+
+var ip = $dids.find(div => div.id == input);
+
+if (ip != undefined) {
+$(`#${input}`).prop("hidden", false).show("slow");
+ $divs.filter(function(index) {
+ return index > 1 & $(this).attr("id") !=
+ input;
+}).hide("slow");
+}
+
+}
+
+function UpdateToolbars() {
+var tbact = $("[data-active=table-check]");
+var tbtxt = tbact.find("span");
+var icact = $("[data-active=icon-check]");
+var ictxt = icact.find("span");
+var selects = getSelections();
+
+(selects.length > 0) ? tbact.removeClass("disabled") : tbact.addClass("disabled");
+
+(selects.length > 0) ?
+tbtxt.text("-" + selects.length) : tbtxt.empty();
+
+var ipops = $('#review').find('a[data-type="icon"]');
+(ipops.length > 0) ? icact.removeClass("disabled") : icact.addClass("disabled"); 
+(ipops.length > 0) ? 
+ictxt.text("-" + ipops.length) : ictxt.empty();
+}
+
+});
+</script>
+</body>
+</html>
