@@ -17,8 +17,6 @@ $.get("directory/popover-2.html", function(html) {
 $popov.data({temp: html});
 });
 
-ColorForm(dcolors);
-
 var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"input":"content"},{"icon":"fill-drip","value":"Color","actions":["Arrange","Format"],"input":"color"},{"icon":"trash","value":" Delete","input":"delete"},{"icon":"download","value":"Export","input":"export"}];
 
 var data = {id: "#getIcons", list: mdata};
@@ -36,9 +34,15 @@ var $tbtbs = $('#tbtoolbar');
 var $search = $('#tbsearch');
 
 var list = [{input: "refresh", icon: "sync"}, {input: "toggleView", icon: "toggle-on"}, {input: "Columns", icon: "th-list", toggle: true}];
-var render = RenderTemp("tbtoolbar", {list: list});
-$tbtbs.html(render);
-      
+$tbtbs.html(RenderTemp("tbtoolbar", {list: list}));
+
+$table.on('load-success.bs.table', function (e, data, status) {
+var columns = GetOptions("Columns");
+columns = columns.map(cl => _.pick(cl,["field", "visible"]));
+var dp = $tbtbs.find(".dropdown-menu");
+dp.html(RenderTemp("dpmenu", {list: columns}));
+});
+
 $tbformat.find("button").on("click", function(e) {
 var $link = $(this);
 $table.trigger("format", [$link.data(), $link]);
@@ -47,6 +51,7 @@ $table.trigger("format", [$link.data(), $link]);
 $search.on("keyup", function(e) {
 var $ip = $(this);
 $table.trigger("format", [$ip.data(), $ip]);
+
 });
 
 
@@ -57,28 +62,25 @@ var input = data.input;
 
 switch (input) {
 case "Columns":
-    var columns = GetOptions("Columns");
-    columns = columns.map(cl => _.pick(cl,
-    ["field", "visible"]));
-    var dp = 
-    el.parent().find(".dropdown-menu");
-    dp.html(RenderTemp("dpmenu", {list: 
-    columns}));
-    var ips = dp.find("input");
- 
-    ips.on("change", function (e) {
-    var ip = $(this);
-    var data = ip.data();
-    var inputs = {all: ['showAllColumns', 'hideAllColumns'], field: ['showColumn', 'hideColumn']};
-    var values = (ip.hasClass("toggle-all")) ? inputs.all : inputs.field;
-    input = (ip.prop("checked")) ? 
-    values[0] : values[1];
-    $table.bootstrapTable(input, 
-    data.field);
-    });
+ var inputs = {all: ['showAllColumns', 'hideAllColumns'], field: ['showColumn', 'hideColumn']};
+  var ips = el.parent().find("input");
+  ips.on("change", function (e) {
+  var ip = $(this);
+  var data = ip.data();
+  var inputs = {all: ['showAllColumns', 'hideAllColumns'], field: ['showColumn', 'hideColumn']};
+  
+  (data.field == "all") ? ips.prop("checked", ip.prop("checked")) : undefined;
+  
+  var values = (data.field == "all") ? inputs.all : inputs.field;
+  input = (ip.prop("checked")) ? values[0] : values[1];
+  $table.bootstrapTable(input,data.field);
+  });
 break;
 
-case "search":      $table.bootstrapTable('refreshOptions', {
+case "search":
+var selects = getSelections();
+
+$table.bootstrapTable('refreshOptions', {
 filterOptions: { filterAlgorithm: "or"}});
 
 var value = el.val().toLowerCase();
@@ -88,12 +90,12 @@ var data = $table.bootstrapTable("getData");
 data = data.filter((it,i) => JSON.stringify(_.pick(it, columns)).indexOf(value) > -1);
 var ids = _.pluck(data, "name");
 $table.bootstrapTable('filterBy', {name: ids});
-console.log(options);
+$table.bootstrapTable('checkBy', {field: 'name', values: _.pluck(selects,"name")});
 break;
 
 case "search-clear":
 $search.val("");
-console.log(input);
+$search.focus();
 break;
 
 default:
@@ -122,7 +124,45 @@ $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.tab
 UpdateToolbars();
 });
 
-/** color button **/
+/** color **/
+$("#modal").load("color-table.html", function (html) {
+var modal = $("#color-modal");
+var colortable = $("#color-table");
+modal.modal('show');
+$colortable.bootstrapTable();
+});
+
+$color.load("directory/color.html", function () {
+var $clbtns = $("#clbtns");
+var $tbtns = $("#type-btns");
+var $cpformat = $("#cpformat");
+
+var dps =  [{input: "color", icon: "arrows-alt-h", value: "Spread"}, {input: "color", icon: "mouse-pointer", value: "Pick"}, {input: "color", icon: "stop", value: "Transparent"}];
+var $data = {"data":[{"name":"Input", icon: "list-ul", "gid": "igr", "values":["default","random","names"]}, {name: "Format", icon: "list-ul", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
+
+
+  $tbtns.find("button")
+  .each(function(ind) {
+  var dc = dcolors[ind];
+  var btn = $(this);
+  btn.text(dc.label);
+  btn.data("css", dc.css);
+  btn.data("target", dc.label);
+  });
+
+  var $dps = 
+  $tbtns.find(".dropdown-menu");
+  var render = RenderTemp("cldp", {list: dps});
+  $dps.html(render);
+
+  GetTemp("select", $data, 
+  function(render) {
+  $cpformat.html(render);
+  console.log(render);
+  });
+  
+});
+
 $color.find("button").on("click", function (event) {
 var target = $(this).attr("data-target");
 var $cpip = $("#cpinput");
@@ -408,7 +448,9 @@ var selects = getSelections();
 (selects.length > 0) ?
 tbtxt.text("-" + selects.length) : tbtxt.empty();
 
-var ipops = $('#review').find('a[data-type="icon"]');
+var ipops = GetIcons($('#review'));
+
+
 (ipops.length > 0) ? icact.removeClass("disabled") : icact.addClass("disabled"); 
 (ipops.length > 0) ? 
 ictxt.text("-" + ipops.length) : ictxt.empty();

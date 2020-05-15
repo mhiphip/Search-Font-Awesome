@@ -42,30 +42,31 @@ row.detail = RenderTemp("detail", {detail: keys});
 return row.detail;
 }
       
-// Tables review functions
+// Tables: functions
 function getSelections() { 
 return $table.bootstrapTable('getAllSelections');
 }
 
 function GetOptions(type) {
 var data = $table.bootstrapTable('getOptions');
-if (type == "Columns") {
-var columns = data.columns[0];
-return columns;
-}
-if (type == undefined) {
-return data;
-}
+  if (type == "Columns") {
+  var columns = data.columns[0];
+  return columns;
+  }
+  if (type == undefined) {
+  return data;
+  }
 }
 
 
+/** Review: icons **/
 function GetIcons($this) { 
 return $this.find('a[data-type="icon"]');
 }
 
 /** Review Funcs **/
 function CreatePopup($icon, $el) {
-var html = $('#popover').data().temp;
+var html = $('#popover').data("temp");
 
     $el.popover({
     title: function() {
@@ -92,11 +93,13 @@ var $color = $('#color');
 var $cpbtns = $('#cpbtns');
 var $cpformat = $('#cpformat');
 var $cpip = $("#cpinput");
+
 var dps =  [{input: "color", icon: "arrows-alt-h", value: "Spread"}, {input: "color", icon: "mouse-pointer", value: "Pick"}, {input: "color", icon: "stop", value: "Transparent"}];
 
-var $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]},{"name":"Scheme", "gid": "sgr","values":["complementary","triad","tetrad","splitcomplement"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
+var $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
 
-GetTemp("select", $data, function(render) {
+GetTemp("select", $data, 
+  function(render) {
   $cpformat.html(render);
   var format = {format: "rgb", values:
   ["#ffffff","#000000"]};
@@ -237,7 +240,7 @@ return res;
 }
 
 function GetTemp(tk, data, callback) {
- $.get("https://mhiphip.github.io/Search-Font-Awesome/data/json/template.json",
+ $.get("data/json/template.json",
  function(json) {
  var temp = (_.isArray(tk)) ? getNested(json, tk) : json[tk];
  var render = Mustache.render(temp, data);

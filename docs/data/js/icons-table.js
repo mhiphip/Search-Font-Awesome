@@ -33,7 +33,7 @@ detailViewIcon: false,
 detailFormatter: "detailFormatter",
 classes: "table table-hover",
 theadClasses: "rgba-purple-strong dark-text",
-buttonsClass: "btn-sm rgba-indigo-strong  px-3 waves-effect",
+buttonsClass: "btn-sm rgba-purple-slight  px-3 waves-effect",
 sortable: true
 }    
 

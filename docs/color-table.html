@@ -9,26 +9,17 @@
       </div>
       <div class="modal-body">
       <!-- Table -->
+
 <table id="table-color"
-  data-url="data/json/colornames.bestof.json"
+  data-ajax="ajaxRequest"
   data-pagination="true"
   data-page-size="50"
   data-pagination-v-align="bottom"
-  data-buttons-align="left"
-  data-search-align="left"
-  data-toolbar-align="right"
-  data-search="true"
-  data-search-align="left"
-  data-stickyHeader="true"
-  data-click-to-select="true"
-  data-show-toggle="true"
-  data-show-fullscreen="true"
   >
   <thead class="thead-light">
     <tr>
       <th data-field="select" data-checkbox="true">select</th>
-      <th data-field="hex" data-formatter="hexFormatter">hex</th>
-     <th data-field="name">name</th>
+     <th data-field="value">name</th>
     </tr>
   </thead>
 </table>
@@ -39,9 +30,21 @@
 
 <script>
 function hexFormatter(index, row) {
-return `<span class="badge badge-pill shadow-sm" style="background-color: ${row.hex}">${row.hex}</span>`;
+return `<span class="badge badge-pill shadow-sm" style="background-color: ${row.name}">${row.name}</span>`;
+}
+
+var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'ui'}};
+
+function ajaxRequest(params) {
+  $.post(data.url, 
+  JSON.stringify(data.data), function(data,status,xhr){}, "json")
+  .then(function (data) {
+  var res = [];
+  data.result.forEach(vl => res.push({value: vl}));
+  console.log(res);
+  params.success(res);
+  });
 }
 
 var $colortable = $('#table-color');
-
 </script>
