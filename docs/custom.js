@@ -164,15 +164,15 @@ var target = data.target;
 
   if (target == "input") {
   var format = ColorFormat($color);
+  console.log(format);
   
-  switch (data.value) {
+  switch (format.input) {
   case "list":
   $("#modal").load("color-table.html", 
   function (html) {
   var modal = $("#color-modal");
   var colortable = $("#color-table");
   modal.modal('show');
-  $colortable.bootstrapTable();
   });
   break;
   }
@@ -232,11 +232,11 @@ var css = input.css;
   $cpip.find(".active").each(function() {
   colors.push($(this).attr("value"));
   });
-  icons.css(dc.css, colors[0]);
+  icons.css(css, colors[0]);
   }
 
   if (input.value == "Transparent") {
-  icons.css(dc.css, "#ffffff");
+  icons.css(css, "#ffffff");
   }
 }
 

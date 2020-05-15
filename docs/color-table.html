@@ -8,20 +8,8 @@
         </button>
       </div>
       <div class="modal-body">
-      <!-- Table -->
-
-<table id="table-color"
-  data-ajax="ajaxRequest"
-  data-pagination="true"
-  data-page-size="50"
-  data-pagination-v-align="bottom"
-  >
-  <thead class="thead-light">
-    <tr>
-      <th data-field="select" data-checkbox="true">select</th>
-     <th data-field="value">name</th>
-    </tr>
-  </thead>
+<!-- Table -->
+<table id="table-color">
 </table>
 </div>
 </div>
@@ -30,21 +18,18 @@
 
 <script>
 function hexFormatter(index, row) {
-return `<span class="badge badge-pill shadow-sm" style="background-color: ${row.name}">${row.name}</span>`;
+return `<span class="badge badge-pill shadow-sm" style="background-color: ${row.hex}">${row.hex}</span>`;
 }
 
-var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'ui'}};
-
-function ajaxRequest(params) {
-  $.post(data.url, 
-  JSON.stringify(data.data), function(data,status,xhr){}, "json")
-  .then(function (data) {
-  var res = [];
-  data.result.forEach(vl => res.push({value: vl}));
-  console.log(res);
-  params.success(res);
-  });
+var options = {
+url: 'data/json/colornames.bestof.json',
+columns: [{field: "name", title: "name"}, {field: "hex", title: "hex", formatter: "hexFormatter"}],
+clickToSelect: true,
+classes: "table table-hover",
+theadClasses: "rgba-purple-strong dark-text",
+buttonsClass: "btn btn-sm rgba-purple-slight waves-effect"
 }
 
 var $colortable = $('#table-color');
+$colortable.bootstrapTable(options);
 </script>
