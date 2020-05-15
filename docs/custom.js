@@ -119,10 +119,9 @@ $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.tab
 UpdateToolbars();
 });
 
-/** color **/
+/** Colors **/
 $color.load("directory/color.html", function () {
 var $clbtns = $("#clbtns");
-var $tbtns = $("#type-btns");
 var $cpformat = $("#cpformat");
 var $cpip = $("#cpinput");
 $cpip.prepend($spin.html());
@@ -131,17 +130,18 @@ var dps =  [{input: "color", icon: "arrows-alt-h", value: "Spread"}, {input: "co
 
 var $data = {"data":[{"name":"Input", icon: "list-ul", "gid": "igr", "values":["default","random","list"]}, {name: "Format", icon: "swatchbook", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
 
-$tbtns.find("button").each(function(ind) {
-var dc = dcolors[ind];
-var btn = $(this);
-btn.text(dc.label);
-btn.data("css", dc.css);
-btn.data("target", dc.label);
+// render colors
+GetTemp("clbtns", {data: dcolors, select: dps}, function (render) {
+$clbtns.append(render);
+  var $btns = $clbtns.find("button");
+  var sl = $clbtns.find("select");
+  $btns.on("click", function (e) {
+  var ip = $(this);
+  var data = ip.data();
+  ip.data("value", sl.val());
+  console.log(data);
+  $review.trigger("format.all", [data, ip]);
 });
-
-var $dps = $tbtns.find(".dropdown-menu");
-var render = RenderTemp("cldp", {list: dps});
-$dps.html(render);
 
 GetTemp("select", $data, 
 function(render) {
@@ -156,53 +156,50 @@ function(render) {
   });
 });
 
+// color events
 $cpip.on("color.format", function (e, data, el) {
 var $ip = $(this);
 var spin = $ip.find(".spinner-border");
 var target = data.target;
 
-if (target == "input") {
-var format = ColorFormat($color);
-switch (data.value) {
-case "list":
-$("#modal").load("color-table.html", 
-function (html) {
-var modal = $("#color-modal");
-var colortable = $("#color-table");
-modal.modal('show');
-$colortable.bootstrapTable();
-});
-break;
-}
+  if (target == "input") {
+  var format = ColorFormat($color);
+  
+  switch (data.value) {
+  case "list":
+  $("#modal").load("color-table.html", 
+  function (html) {
+  var modal = $("#color-modal");
+  var colortable = $("#color-table");
+  modal.modal('show');
+  $colortable.bootstrapTable();
+  });
+  break;
+  }
 
   ColorInput(format, function(res) {
-  spin.show();
-  $ip.find(".badge").remove();
-  res.check = function () {
-  return (lightOrDark(this) == "light") ? "dark": "light";
-  };
-  setTimeout(function() { 
-  var pills = RenderTemp("pills", res);
-  $cpip.append(pills);
-  console.log(pills);
-  spin.hide();
-  }, 800);
-  
-  var $links = $ip.find("span");
-  $links.on("click", function (event) {
-  $(this).toggleClass("active");
-  $links.find("span").remove();
-  var acs = $cpinput.find(".active");
-  acs.append("<span class='fas fa-check'><span>");
+    spin.show();
+    $ip.find(".badge").remove();
+    res.check = function () {
+    return (lightOrDark(this) == "light") ? "dark": "light";
+    };
+    setTimeout(function() { 
+      var pills = 
+      RenderTemp("pills", res);
+      $cpip.append(pills);
+      spin.hide();
+      }, 800);
   });
+  }
 });
-}
 
+// color event
 });
 });
-  
-$review.on("format.all", function(event, input, el) {
-var $this = $(this);
+
+
+/** Review **/
+$review.on("format.all", function(e,input, el) {
 var $cpip = $("#cpinput");
 var $exp = $("#export");
 var $extres = $("#export-result");
@@ -211,19 +208,21 @@ var colors = format.values;
 var icons = $review.find("a");
 
 if (input.input == "color") {
-var dc = _.find(dcolors, {label:  input.label});
-  
+var css = input.css;
+
   if (input.value == "Spread") {
   icons.each(function (index) {
   var icon = $(this);
   var values = [];
   dcolors.forEach(dc => 
   values.push(icon.css(dc.css)));
+  console.log(values);
+  
   var cls = colors.filter((cl,i) => 
   !values.includes(cl));
   var ind = _.random(0, cls.length - 1);
   var cl = cls[ind];
-  $(this).css(dc.css, cl);
+  $(this).css(css, cl);
   });
   }
 
