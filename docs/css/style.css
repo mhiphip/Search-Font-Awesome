@@ -17,11 +17,6 @@ margin-top: -10px; }
 background: #F44336;
 }
 
-.page-item page-pre {
-background: #F44336;
-}
-
-
 .intb {
 height: 50px;
 max-width:100%; 
@@ -34,6 +29,24 @@ overflow: auto;
 
 code {
 color: #0099CC;
+}
+
+.spinner-border {
+color: rgba(205, 220, 57, 0.7);
+font-weight: bold;
+}
+
+.form-label {
+color: rgba(121, 85, 72, 0.7);
+font-style: oblique;
+}
+
+.badge.text-dark {
+color: black !important;
+}
+
+.badge.text-light {
+color: white !important;
 }
 
 .popover-header {

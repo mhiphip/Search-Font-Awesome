@@ -4,8 +4,11 @@ var $btntb =  $('#btn-actions');
 var $content = $('#content');
 var $review = $('#review');
 var $color = $('#color');
+
+// helper divs
 var $tdom = $('#template');
 var $popov = $('#popover');
+var $spin = $('#spinner');
 var dcolors = [{id: "cpfront", label: "Front", css: "color"}, {id: "cpback", label: "Back", css: "background-color"}];
 var css = _.pluck(dcolors, "css");
 
@@ -102,7 +105,6 @@ default:
 $table.bootstrapTable(input);
 break;
 }
-
 });
 
 // toggle view (change class)
@@ -122,70 +124,84 @@ $color.load("directory/color.html", function () {
 var $clbtns = $("#clbtns");
 var $tbtns = $("#type-btns");
 var $cpformat = $("#cpformat");
+var $cpip = $("#cpinput");
+$cpip.prepend($spin.html());
 
 var dps =  [{input: "color", icon: "arrows-alt-h", value: "Spread"}, {input: "color", icon: "mouse-pointer", value: "Pick"}, {input: "color", icon: "stop", value: "Transparent"}];
-var $data = {"data":[{"name":"Input", icon: "list-ul", "gid": "igr", "values":["default","random","names"]}, {name: "Format", icon: "swatchbook", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
 
+var $data = {"data":[{"name":"Input", icon: "list-ul", "gid": "igr", "values":["default","random","list"]}, {name: "Format", icon: "swatchbook", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
 
-  $tbtns.find("button")
-  .each(function(ind) {
-  var dc = dcolors[ind];
-  var btn = $(this);
-  btn.text(dc.label);
-  btn.data("css", dc.css);
-  btn.data("target", dc.label);
-  });
-
-  var $dps = 
-  $tbtns.find(".dropdown-menu");
-  var render = RenderTemp("cldp", {list: dps});
-  $dps.html(render);
-
-  GetTemp("select", $data, 
-  function(render) {
-  $cpformat.html(render);
-  console.log(render);
-  });
-  
+$tbtns.find("button").each(function(ind) {
+var dc = dcolors[ind];
+var btn = $(this);
+btn.text(dc.label);
+btn.data("css", dc.css);
+btn.data("target", dc.label);
 });
 
-$color.find("button").on("click", function (event) {
-var target = $(this).attr("data-target");
-var $cpip = $("#cpinput");
+var $dps = $tbtns.find(".dropdown-menu");
+var render = RenderTemp("cldp", {list: dps});
+$dps.html(render);
+
+GetTemp("select", $data, 
+function(render) {
+  $cpformat.html(render); 
+  var $sformat = $cpformat.find("button");
+  $sformat.on("click", function (e) {
+  var ip = $(this);
+  var data = ip.data();
+  var sl = $(data.input);
+  sl.data("value", sl.val());
+  $cpip.trigger("color.format", [data, sl]);
+  });
+});
+
+$cpip.on("color.format", function (e, data, el) {
+var $ip = $(this);
+var spin = $ip.find(".spinner-border");
+var target = data.target;
 
 if (target == "input") {
-$cpip.html("loading...");
 var format = ColorFormat($color);
-
-if (format.input == "names") {
-$("#modal").load("color-table.html", function (html) {
+switch (data.value) {
+case "list":
+$("#modal").load("color-table.html", 
+function (html) {
 var modal = $("#color-modal");
 var colortable = $("#color-table");
 modal.modal('show');
 $colortable.bootstrapTable();
 });
+break;
 }
+
   ColorInput(format, function(res) {
+  spin.show();
+  $ip.find(".badge").remove();
+  res.check = function () {
+  return (lightOrDark(this) == "light") ? "dark": "light";
+  };
+  setTimeout(function() { 
   var pills = RenderTemp("pills", res);
-  $cpip.html(pills).trigger("load");
+  $cpip.append(pills);
+  console.log(pills);
+  spin.hide();
+  }, 800);
+  
+  var $links = $ip.find("span");
+  $links.on("click", function (event) {
+  $(this).toggleClass("active");
+  $links.find("span").remove();
+  var acs = $cpinput.find(".active");
+  acs.append("<span class='fas fa-check'><span>");
   });
+});
 }
+
 });
-
-
-$("#cpinput").on("load", function (event) {
-var $cpinput = $(this);
-var $links = $(this).find("a");
-$links.on("click", function (event) {
-$(this).toggleClass("active");
-$links.find("span").remove();
-var acs = $cpinput.find(".active");
-acs.append("<span class='fas fa-check'><span>");
-});
-
 });
   
-$review.on("format-all", function(event, input, el) {
+$review.on("format.all", function(event, input, el) {
 var $this = $(this);
 var $cpip = $("#cpinput");
 var $exp = $("#export");
@@ -298,7 +314,7 @@ $dpms.each(function () {
   $dpms.removeClass("active");
   $(this).addClass("active");
   ArrangeSecs(data.input);
-  $review.trigger("format-all", [data, link]);
+  $review.trigger("format.all", [data, link]);
   });
   });
 });

@@ -133,13 +133,11 @@ var $ips = $color.find("select");
 var $cpip = $("#cpinput");
 var values = [];
 var ob = {};
-
   $ips.each(function() {
   var ip = $(this).attr("id");
   ob[ip] = $(this).val();
   });
-  
-  $cpip.find("a").each(function() {
+  $cpip.find("span").each(function() {
   values.push($(this).css("background-color"));
 });
   ob.values = values;
