@@ -42,6 +42,9 @@ color: rgba(63, 81, 181, 0.7) ;
 font-weight: bold;
 }
 
+.input-group.md-form.form-sm.form-1 input{
+  border: 1px solid #bdbdbd;
+}
 
 .dropdown-menu {
 max-height: 200px;

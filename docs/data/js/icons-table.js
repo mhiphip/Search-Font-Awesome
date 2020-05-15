@@ -16,6 +16,7 @@ var columns = [
   
 columns.forEach((col,i) => {
 col.formatter = "RowFormatter";
+col.searchable = (!["icon","dom"].includes(col.field)) ? true : false;
 columns[i] = col;
 });
 
@@ -33,9 +34,8 @@ detailViewIcon: false,
 detailFormatter: "detailFormatter",
 classes: "table table-hover",
 theadClasses: "rgba-purple-strong dark-text",
-buttonsClass: "btn-sm rgba-purple-slight  px-3 waves-effect",
-sortable: true
-}    
+buttonsClass: "btn btn-sm rgba-purple-slight waves-effect"
+}
 
 // Events
 $(function() {

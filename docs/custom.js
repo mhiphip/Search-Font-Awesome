@@ -48,7 +48,7 @@ var $link = $(this);
 $table.trigger("format", [$link.data(), $link]);
 });
 
-$search.on("keyup", function(e) {
+$search.on("change", function(e) {
 var $ip = $(this);
 $table.trigger("format", [$ip.data(), $ip]);
 
@@ -94,7 +94,7 @@ $table.bootstrapTable('checkBy', {field: 'name', values: _.pluck(selects,"name")
 break;
 
 case "search-clear":
-$search.val("");
+$search.val("").change();
 $search.focus();
 break;
 
@@ -109,15 +109,8 @@ break;
 $table.on('toggle.bs.table', function (e, cardView, args) {
 var $intb = $(".intb");
 var $incv = $(".incv");
-    if (cardView == true) {
-    $intb.removeClass("intb")
-        .addClass("incv");
-    }
-    
-    if (cardView == false) {
-    $incv.removeClass("incv")
-        .addClass("intb");
-    }
+$intb.toggleClass("incv", cardView);
+$incv.toggleClass("intb", !cardView);
 });
 
 $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function (e, name, args) {
@@ -125,20 +118,13 @@ UpdateToolbars();
 });
 
 /** color **/
-$("#modal").load("color-table.html", function (html) {
-var modal = $("#color-modal");
-var colortable = $("#color-table");
-modal.modal('show');
-$colortable.bootstrapTable();
-});
-
 $color.load("directory/color.html", function () {
 var $clbtns = $("#clbtns");
 var $tbtns = $("#type-btns");
 var $cpformat = $("#cpformat");
 
 var dps =  [{input: "color", icon: "arrows-alt-h", value: "Spread"}, {input: "color", icon: "mouse-pointer", value: "Pick"}, {input: "color", icon: "stop", value: "Transparent"}];
-var $data = {"data":[{"name":"Input", icon: "list-ul", "gid": "igr", "values":["default","random","names"]}, {name: "Format", icon: "list-ul", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
+var $data = {"data":[{"name":"Input", icon: "list-ul", "gid": "igr", "values":["default","random","names"]}, {name: "Format", icon: "swatchbook", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
 
 
   $tbtns.find("button")
