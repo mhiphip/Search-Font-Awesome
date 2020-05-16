@@ -87,47 +87,6 @@ var html = $('#popover').data("temp");
 }
 
 /** Color Funcs **/
-function ColorForm(dcolors) {
-var $review = $('#review');
-var $color = $('#color');
-var $cpbtns = $('#cpbtns');
-var $cpformat = $('#cpformat');
-var $cpip = $("#cpinput");
-
-var dps =  [{input: "color", icon: "arrows-alt-h", value: "Spread"}, {input: "color", icon: "mouse-pointer", value: "Pick"}, {input: "color", icon: "stop", value: "Transparent"}];
-
-var $data = {"data":[{"name":"Input", "gid": "igr", "values":["default","random","names"]}, {name: "Format", gid: "fgr", values: ['rgb', 'hsl', 'hex', 'auto']}], id: function() { return this.name.toLowerCase();}};
-
-GetTemp("select", $data, 
-  function(render) {
-  $cpformat.html(render);
-  var format = {format: "rgb", values:
-  ["#ffffff","#000000"]};
-  var pills = RenderTemp("pills", format);
-  $cpip.html(pills);
-});
-
-GetTemp("cpbtns", {data: dcolors}, 
-function(render) {
-  $cpbtns.html(render);
-  var dp = $cpbtns.find(".dropdown-menu");
-  
-  GetTemp("btndp", {list: dps}, 
-  function(brender) {
-  dp.html(brender);
-  dp.find("a").on("click", function () {
-  var link = $(this);
-  link.attr("data-label", 
-  link.parent().attr("data-label"));
-  link.attr("data-value",
-  link.attr("value"));
-  $review.trigger("format-all",
-  [link.data(), link]);
-  });
-  });
-});
-}
-
 function ColorFormat($color) {
 var $ips = $color.find("select");
 var $cpip = $("#cpinput");
@@ -137,7 +96,7 @@ var ob = {};
   var ip = $(this).attr("id");
   ob[ip] = $(this).val();
   });
-  $cpip.find("span").each(function() {
+  $cpip.find("a").each(function() {
   values.push($(this).css("background-color"));
 });
   ob.values = values;
@@ -158,6 +117,48 @@ $.post(data.url,JSON.stringify(data.data), function(data,status,xhr){}, "json")
   format.values = ["#ffffff","#000000"];
   callback(format);
   }
+}
+
+function hexFormatter(index, row) {
+return `<span class="badge badge-pill shadow-sm" style="background-color: ${row.hex}">${row.hex}</span>`;
+}
+
+function LoadClTable($modal) {
+var div = $modal.children().first();
+div.attr("id", 'color-modal');
+var title = $modal.find(".modal-header");
+var body = $modal.find(".modal-body");
+
+title.html("Color List <span class='badge badge-primary'></span>");
+body.append("<table id='table-color'></table>");
+
+var options = {
+url: 'data/json/colornames.bestof.json',
+columns: [{field: "select", checkbox: true}, {field: "hex", title: "hex", formatter: "hexFormatter"}, {field: "name", title: "name"}],
+search: true,
+height: 450,
+clickToSelect: true,
+classes: "table table-hover",
+theadClasses: "rgba-purple-strong dark-text",
+buttonsClass: "btn btn-sm rgba-purple-slight waves-effect"
+}
+
+var $clmodal = $('#color-modal');
+var $cltb = $('#table-color');
+var $mbtns = $clmodal.find("button");
+var $save = $mbtns.filter("[data-action='save']");
+$cltb.bootstrapTable(options);
+
+$clmodal.on('shown.bs.modal',function () {
+$cltb.bootstrapTable('resetView');
+});
+
+$cltb.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function (e, name, args) {
+var selects = $cltb.bootstrapTable('getAllSelections');
+var span = title.find("span");
+(selects.length > 0) ? span.text(selects.length) : span.empty();
+});
+
 }
 
 function AddCps(data, $cps) {

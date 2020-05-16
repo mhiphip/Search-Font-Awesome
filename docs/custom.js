@@ -7,10 +7,10 @@ var $color = $('#color');
 
 // helper divs
 var $tdom = $('#template');
+var $modal = $('#modal');
 var $popov = $('#popover');
 var $spin = $('#spinner');
 var dcolors = [{id: "cpfront", label: "Front", css: "color"}, {id: "cpback", label: "Back", css: "background-color"}];
-var css = _.pluck(dcolors, "css");
 
 $.get("data/json/template 2.json", function(temp) { 
 $tdom.data({table: temp});
@@ -18,6 +18,11 @@ $tdom.data({table: temp});
 
 $.get("directory/popover-2.html", function(html) { 
 $popov.data({temp: html});
+});
+
+$modal.load("template/modal.html",
+function(html) {
+console.log(html);
 });
 
 var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"input":"content"},{"icon":"fill-drip","value":"Color","actions":["Arrange","Format"],"input":"color"},{"icon":"trash","value":" Delete","input":"delete"},{"icon":"download","value":"Export","input":"export"}];
@@ -139,7 +144,6 @@ $clbtns.append(render);
   var ip = $(this);
   var data = ip.data();
   ip.data("value", sl.val());
-  console.log(data);
   $review.trigger("format.all", [data, ip]);
 });
 
@@ -147,6 +151,7 @@ GetTemp("select", $data,
 function(render) {
   $cpformat.html(render); 
   var $sformat = $cpformat.find("button");
+  
   $sformat.on("click", function (e) {
   var ip = $(this);
   var data = ip.data();
@@ -160,46 +165,64 @@ function(render) {
 $cpip.on("color.format", function (e, data, el) {
 var $ip = $(this);
 var spin = $ip.find(".spinner-border");
+spin.hide();
 var target = data.target;
 
-  if (target == "input") {
-  var format = ColorFormat($color);
-  console.log(format);
+var callback = function (res) {
+console.log("load pills...");
+  spin.show(); $ip.find("a").remove();
+  res.check = function () {
+  return (lightOrDark(this) == "light") ?
+  "dark": "light";};
+  setTimeout(function() { 
+  var pills = RenderTemp("pills", res);
+  $ip.append(pills);
+      var $links = $ip.find("a");
+      $links.find("span").hide();
+      $links.on("click", function(e) {
+      var link = $(this);
+      link.toggleClass("active");
+      link.find("span").toggle();
+      });
+      spin.hide();
+    }, 500);
+};
+
+if (target == "input") {
+  var format = ColorFormat($color); 
   
   switch (format.input) {
   case "list":
-  $("#modal").load("color-table.html", 
-  function (html) {
-  var modal = $("#color-modal");
-  var colortable = $("#color-table");
-  modal.modal('show');
+  var $modal = $("#modal");
+  LoadClTable($modal);
+  var $clmodal = $('#color-modal');
+  $clmodal.modal("show");
+  
+  var $cltb = $('#table-color');
+  var $mbtns = $clmodal.find("button");
+  var $save = 
+  $mbtns.filter("[data-action='save']");
+  $save.one("click", function () {
+  var selects = $cltb
+  .bootstrapTable('getAllSelections');
+  selects = _.pluck(selects, "hex");
+  format.values = selects;
+  callback(format);
   });
   break;
+  default: 
+  ColorInput(format, callback);
+  break;
   }
-
-  ColorInput(format, function(res) {
-    spin.show();
-    $ip.find(".badge").remove();
-    res.check = function () {
-    return (lightOrDark(this) == "light") ? "dark": "light";
-    };
-    setTimeout(function() { 
-      var pills = 
-      RenderTemp("pills", res);
-      $cpip.append(pills);
-      spin.hide();
-      }, 800);
-  });
-  }
+}
 });
 
-// color event
+// !color event
 });
 });
-
 
 /** Review **/
-$review.on("format.all", function(e,input, el) {
+$review.on("format.all", function(e, input, el) {
 var $cpip = $("#cpinput");
 var $exp = $("#export");
 var $extres = $("#export-result");
@@ -208,36 +231,32 @@ var colors = format.values;
 var icons = $review.find("a");
 
 if (input.input == "color") {
-var css = input.css;
+var css = _.pluck(dcolors, "css");
 
-  if (input.value == "Spread") {
+if (input.value == "Spread") {
   icons.each(function (index) {
   var icon = $(this);
-  var values = [];
-  dcolors.forEach(dc => 
-  values.push(icon.css(dc.css)));
-  console.log(values);
-  
+  var values = css.map(c => icon.css(c));
   var cls = colors.filter((cl,i) => 
   !values.includes(cl));
   var ind = _.random(0, cls.length - 1);
-  var cl = cls[ind];
-  $(this).css(css, cl);
+  $(this).css(input.css, cls[ind]);
   });
-  }
+}
 
-  if (input.value == "Pick") {
-  var dfc = css.find(c => c != dc.css);
+if (input.value == "Pick") {
   colors = [];
-  $cpip.find(".active").each(function() {
-  colors.push($(this).attr("value"));
-  });
-  icons.css(css, colors[0]);
-  }
+  var atvs = $cpip.find(".active");
+  var colors = [];
+  atvs.each(function(){ 
+  colors.push($(this).attr("value"))});
+  var ind = _.random(0, colors.length);
+  icons.css(input.css, colors[ind]);
+}
 
-  if (input.value == "Transparent") {
-  icons.css(css, "#ffffff");
-  }
+if (input.value == "Transparent") {
+  icons.css(input.css, "#ffffff");
+}
 }
 
 if (input.input == "delete") {

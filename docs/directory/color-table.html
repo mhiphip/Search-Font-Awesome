@@ -1,0 +1,50 @@
+<!-- Button trigger modal -->
+
+<!-- Frame Modal Bottom -->
+<div class="modal fade bottom" id="color-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-frame modal-bottom" role="document">
+<div class="modal-header">
+<h5 class="modal-title">Color List</h5>
+</div>
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row d-flex justify-content-center align-items-center mh-80">
+        <table id="table-color">
+        </table>
+        
+        </div>
+<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+<button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Frame Modal Bottom -->
+
+<script>
+function hexFormatter(index, row) {
+return `<span class="badge badge-pill shadow-sm" style="background-color: ${row.hex}">${row.hex}</span>`;
+}
+
+var options = {
+url: 'data/json/colornames.bestof.json',
+columns: [{field: "select", checkbox: true}, {field: "hex", title: "hex", formatter: "hexFormatter"}, {field: "name", title: "name"}],
+search: true,
+height: 450,
+clickToSelect: true,
+classes: "table table-hover",
+theadClasses: "rgba-purple-strong dark-text",
+buttonsClass: "btn btn-sm rgba-purple-slight waves-effect"
+}
+
+var $clmodal = $('#color-modal');
+var $colortable = $('#table-color');
+$colortable.bootstrapTable(options);
+
+$clmodal.on('shown.bs.modal', 
+function () {
+$colortable.bootstrapTable('resetView');
+});
+
+</script>
