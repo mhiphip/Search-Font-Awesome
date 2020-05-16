@@ -118,6 +118,7 @@ $.post(data.url,JSON.stringify(data.data), function(data,status,xhr){}, "json")
   }
 }
 
+// colors table
 function hexFormatter(index, row) {
 return `<span class="badge badge-pill shadow-sm" style="background-color: ${row.hex}">${row.hex}</span>`;
 }
@@ -159,6 +160,7 @@ var span = title.find("span");
 });
 }
 
+// color picker
 function AddCps(data, $cps) {
 var temp = `<div class="colorpicker"><div class="colorpicker-saturation"><i class="colorpicker-guide"></i></div><div class="colorpicker-hue"><i class="colorpicker-guide"></i></div><div class="colorpicker-alpha"><div class="colorpicker-alpha-color"></div><i class="colorpicker-guide"></i></div><div class="colorpicker-bar">
 <div class="input-group content-justify-center" id="swatches">
@@ -176,7 +178,6 @@ swatch.empty();
   nbtn.css("background-color", vl);
   swatch.append(nbtn);
   });
-
   swatch.children().on('click', 
   function () {
   e.colorpicker.setValue($(this).val());
@@ -185,6 +186,7 @@ swatch.empty();
 
 }
 
+// export
 function GetBase64(el) {
 var svgst = new XMLSerializer().serializeToString(el);
 var svg64 = window.btoa(svgst);

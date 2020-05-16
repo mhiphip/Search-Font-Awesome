@@ -1,5 +1,4 @@
 $(document).ready(function () {
-var btns = ["getReview","getData","getIcons"];
 var $btntb =  $('#btn-actions');
 var $content = $('#content');
 var $review = $('#review');
@@ -19,11 +18,11 @@ $.get("data/json/template 2.json", function(temp) {
 $tdom.data({table: temp});
 });
 
-$.get("directory/popover-2.html", function(html) { 
+$.get("directory/popover.html", function(html) { 
 $popov.data({temp: html});
 });
 
-$modal.load("template/modal.html");
+$modal.load("directory/modal.html");
 
 /** Toolbar Buttons **/
 var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"input":"content"},{"icon":"fill-drip","value":"Color","actions":["Arrange","Format"],"input":"color"},{"icon":"trash","value":" Delete","input":"delete"},{"icon":"download","value":"Export","input":"export"}];
@@ -32,13 +31,11 @@ var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"i
 GetTemp("btndp", {list: mdata}, function(render) {
 var dp = $("#getIcons").next();
 dp.html(render);
-console.log(render);
 
 var $dpms = dp.children();
 $dpms.on("click", function () {
   var link = $(this);
   var data = link.data();
-  console.log(data);
   ArrangeSecs(data.input);
   $review.trigger("format.all", [data, link]);
   });
@@ -277,7 +274,6 @@ spin.hide();
 var target = data.target;
 
 var callback = function (res) {
-console.log("load pills...");
 
   spin.show(); $ip.find("a").remove();
   res.check = function () {
