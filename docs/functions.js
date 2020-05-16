@@ -83,7 +83,6 @@ var html = $('#popover').data("temp");
     trigger: 'click',
     placement: 'bottom'
     });
-
 }
 
 /** Color Funcs **/
@@ -158,7 +157,6 @@ var selects = $cltb.bootstrapTable('getAllSelections');
 var span = title.find("span");
 (selects.length > 0) ? span.text(selects.length) : span.empty();
 });
-
 }
 
 function AddCps(data, $cps) {

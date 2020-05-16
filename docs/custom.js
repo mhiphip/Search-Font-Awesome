@@ -11,7 +11,10 @@ var $modal = $('#modal');
 var $popov = $('#popover');
 var $spin = $('#spinner');
 var dcolors = [{id: "cpfront", label: "Front", css: "color"}, {id: "cpback", label: "Back", css: "background-color"}];
+var $selects = [];
 
+/** Load Events **/
+// 0 
 $.get("data/json/template 2.json", function(temp) { 
 $tdom.data({table: temp});
 });
@@ -20,21 +23,38 @@ $.get("directory/popover-2.html", function(html) {
 $popov.data({temp: html});
 });
 
-$modal.load("template/modal.html",
-function(html) {
-console.log(html);
-});
+$modal.load("template/modal.html");
 
+/** Toolbar Buttons **/
 var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"input":"content"},{"icon":"fill-drip","value":"Color","actions":["Arrange","Format"],"input":"color"},{"icon":"trash","value":" Delete","input":"delete"},{"icon":"download","value":"Export","input":"export"}];
 
-var data = {id: "#getIcons", list: mdata};
-GetTemp("btndp", data, function(render) {
-var dp = $(data.id).next();
+// getIcons
+GetTemp("btndp", {list: mdata}, function(render) {
+var dp = $("#getIcons").next();
 dp.html(render);
+console.log(render);
+
+var $dpms = dp.children();
+$dpms.on("click", function () {
+  var link = $(this);
+  var data = link.data();
+  console.log(data);
+  ArrangeSecs(data.input);
+  $review.trigger("format.all", [data, link]);
+  });
 });
 
-// Tables
-$content.load("directory/icons-2.html", 
+// getReview
+$('#getReview').on("click", function () {
+$review.trigger("load.icons");
+$selects = [];
+$table.bootstrapTable('refresh');
+UpdateToolbars();
+});
+
+/** 1. Tables **/
+// load table
+$content.load("directory/icons.html", 
 function (html) {
 var $table = $('#table');
 var $tbformat = $('#tbformat');
@@ -59,11 +79,9 @@ $table.trigger("format", [$link.data(), $link]);
 $search.on("change", function(e) {
 var $ip = $(this);
 $table.trigger("format", [$ip.data(), $ip]);
-
 });
 
-
-/** content: table **/
+// 1 
 // table events
 $table.on('format', function (e, data, el) {
 var input = data.input;
@@ -86,8 +104,6 @@ case "Columns":
 break;
 
 case "search":
-var selects = getSelections();
-
 $table.bootstrapTable('refreshOptions', {
 filterOptions: { filterAlgorithm: "or"}});
 
@@ -98,7 +114,6 @@ var data = $table.bootstrapTable("getData");
 data = data.filter((it,i) => JSON.stringify(_.pick(it, columns)).indexOf(value) > -1);
 var ids = _.pluck(data, "name");
 $table.bootstrapTable('filterBy', {name: ids});
-$table.bootstrapTable('checkBy', {field: 'name', values: _.pluck(selects,"name")});
 break;
 
 case "search-clear":
@@ -112,6 +127,7 @@ break;
 }
 });
 
+// 1 
 // toggle view (change class)
 $table.on('toggle.bs.table', function (e, cardView, args) {
 var $intb = $(".intb");
@@ -121,7 +137,99 @@ $incv.toggleClass("intb", !cardView);
 });
 
 $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function (e, name, args) {
+var selects = getSelections();
+$selects = $selects.concat(selects);
+$selects = _.uniq($selects);
 UpdateToolbars();
+});
+
+/** 2. Review: load **/
+$review.on("load.icons", function(e) {
+var $this = $(this);
+var $ticons = $selects;
+$this.append(_.pluck($ticons, "icon"));
+
+var $ricons = GetIcons($this);
+var $nricons = $ricons.not("[data-toggle]");
+
+// format popover
+$nricons.removeClass("btn-light").toggleClass("animated bounceInLeft");$nricons.find("i").removeClass("fa-2x").addClass("fa-3x");
+$nricons.attr("data-toggle", "popover");
+
+// add data
+$nricons.each(function() {
+var $icon = $(this);
+$icon.attr("id", _.uniqueId('icon_'));
+var icon = _.find($ticons, {name: $icon.data("name")});
+
+if (icon != undefined) {
+$icon.data(icon);
+var obj = {detail: detailFormatter(icon.index, icon), id: $icon.attr("id"), color: dcolors};
+icon = Object.assign(icon, obj);
+CreatePopup(icon, $icon);
+}
+});
+
+// 2. review: popover
+var $ricons = $review.find('[data-toggle="popover"]');
+
+$ricons.on('inserted.bs.popover', function () {
+var $this = $(this); 
+var id = $this.attr("id");
+var $pops = $(".popover");
+var $div = $pops.find(`[data-target="${id}"]`);
+
+// toggle popover
+($pops.length > 1) ? $pops.first().popover("hide") : $pops;
+
+// find icon css
+dcolors.forEach(dc => dc.value = $this.css(dc.css));
+
+// popover childs
+var $cps = $div.find("[id^='cp']");
+var $input = $div.find("[data-input='color']");        
+var $tbs = $div.find("[data-type='toolbar']");
+
+// add cp
+$input.attr("value", function(){
+var css = $(this).data("css");
+return $this.css(css);});
+var format = ColorFormat($color);
+AddCps(format, $cps);
+
+// input event
+$input.on("change", function() {
+var data = $(this).data();
+$this.trigger("format", [data, $(this)]);
+});
+
+// toolbar event
+$tbs.find("a").each(function(e) {
+    var $tb = $(this);
+    $tb.attr("data-target", `#${id}`);
+    $tb.click(function () { 
+    $tb.toggleClass("animated bounce");
+    FormatIcon($tb); });
+});
+});
+// !popover
+
+$ricons.on("format", function(e,data,el) {
+var $ricon = $(this);
+  if (data.input == "color") {
+  $ricon.css(data.css, el.val());
+  }
+    
+  if (input == "delete") {
+    $ricon.popover("hide");
+    $ricon.toggleClass("animted bounceOutUp");
+    setTimeout(function() { 
+    $ricon.remove(); 
+    UpdateToolbars();
+    }, 800);
+  }
+});
+// !icon format
 });
 
 /** Colors **/
@@ -157,7 +265,7 @@ function(render) {
   var data = ip.data();
   var sl = $(data.input);
   sl.data("value", sl.val());
-  $cpip.trigger("color.format", [data, sl]);
+$cpip.trigger("color.format", [data,sl]);
   });
 });
 
@@ -170,6 +278,7 @@ var target = data.target;
 
 var callback = function (res) {
 console.log("load pills...");
+
   spin.show(); $ip.find("a").remove();
   res.check = function () {
   return (lightOrDark(this) == "light") ?
@@ -220,6 +329,7 @@ if (target == "input") {
 // !color event
 });
 });
+
 
 /** Review **/
 $review.on("format.all", function(e, input, el) {
@@ -299,141 +409,9 @@ var keys = ["name","unicode","prefixes","terms", "dom","svg"];
 var obj = keys.reduce((acc, k) => (acc[k] = data[k], acc), {});
 $data.push(obj);
 });
-
-var click = el.attr("data-click");
-  if (click == undefined) {
-  el.attr("data-click", 1);
-  el.click();
-  }
-  else {
-  console.log(input);
-  console.log(click);
-  }
-}
-
-});
-
-// review icons
-$('#getReview').on("click", function () {
-$review.trigger("load.icons");
-$table.bootstrapTable('refresh');
-$table.bootstrapTable('refresh');
-UpdateToolbars();
-});
-
-/** Icon Events **/
-var $gIc = $('#getIcons');
-var $dpms = $gIc.next().children();
-
-$dpms.each(function () {
-  $(this).on("click", function () {
-  var link = $(this);
-  var data = link.data();
-  $dpms.removeClass("active");
-  $(this).addClass("active");
-  ArrangeSecs(data.input);
-  $review.trigger("format.all", [data, link]);
-  });
-  });
-});
-
-/** load icons **/
-$review.on("load.icons", function(event) {
-var $ticons = getSelections();
-$review.append(_.pluck($ticons, "icon"));
-
-var $ricons = GetIcons($(this));
-var html2 = $popov.data().temp;
-
-// find new icons
-var $nricons = $ricons.not("[data-toggle]");
-$nricons.each(function() {
-$(this).attr("id", _.uniqueId('icon_'));
-});
-
-// format popover
-$nricons.removeClass("btn-light").toggleClass("animated bounceInLeft");
-$nricons.attr("data-toggle", "popover"); $nricons.find("i").removeClass("fa-2x").addClass("fa-3x");
-
-// add data
-$nricons.each(function() {
-var $this = $(this);
-var icon = $ticons.find(ic => ic.name == $this.data("name"));
-
-if (icon != undefined) {
-$this.data(icon);
-icon.detail = detailFormatter(icon.index, icon);
-icon.id = $this.attr("id");
-icon.color = dcolors;
-CreatePopup(icon, $this);
 }
 });
-
-// ----
-$('[data-toggle="popover"]').on('inserted.bs.popover', function () {
-var $this = $(this); 
-var id = $this.attr("id");
-var $pops = $(".popover");
-var $div = $pops.find(`[data-target="${id}"]`);
-
-// toggle popover
-($pops.length > 1) ? $pops.first().popover("hide") : $pops;
-
-// find icon css
-dcolors.forEach(dc => dc.value = $this.css(dc.css));
-
-// popover childs
-var $cps = $div.find("[id^='cp']");
-var $input = $div.find("[data-input='color']");        
-var $tbs = $div.find("[data-type='toolbar']");
-
-// add cp
-$input.each(function() {
-    var input = $(this);
-    input.attr("data-target", `#${id}`);
-    var dc = _.find(dcolors, {label: 
-    input.attr("data-label")});
-    input.attr("value", dc.value);
 });
-
-var format = ColorFormat($color);
-AddCps(format, $cps);
-
-// input event
-$input.on("change", function () { FormatIcon($(this)); });
-
-// toolbar event
-$tbs.find("a").each(function(e) {
-    var $tb = $(this);
-    $tb.attr("data-target", `#${id}`);
-    $tb.click(function () { 
-    $tb.toggleClass("animated bounce");
-    FormatIcon($tb); });
-});
-});
-
-});
-
-
-function FormatIcon($input) {
-var input = $input.attr("data-input");
-var id = $input.attr("data-target");
-var $el = $(id);
-
-  if (input == "color") {
-  var dc = _.find(dcolors, {label:  $input.attr("data-label")});
-    $el.css(dc.css, $input.val());
-  }
-    
-  if (input == "delete") {
-    $el.popover("hide");
-    $el.toggleClass("animted bounceOutUp");
-    setTimeout(function() { 
-    $el.remove(); UpdateToolbars();
-    }, 800);
-  }
-}
-
 
 function ArrangeSecs(input) {
 var $divs = $('.card > div');
@@ -461,19 +439,18 @@ var tbact = $("[data-active=table-check]");
 var tbtxt = tbact.find("span");
 var icact = $("[data-active=icon-check]");
 var ictxt = icact.find("span");
-var selects = getSelections();
 
-(selects.length > 0) ? tbact.removeClass("disabled") : tbact.addClass("disabled");
+($selects.length > 0) ? tbact.removeClass("disabled") : tbact.addClass("disabled");
 
-(selects.length > 0) ?
-tbtxt.text("-" + selects.length) : tbtxt.empty();
+($selects.length > 0) ?
+tbtxt.text("-" + $selects.length) : tbtxt.empty();
 
 var ipops = GetIcons($('#review'));
-
 
 (ipops.length > 0) ? icact.removeClass("disabled") : icact.addClass("disabled"); 
 (ipops.length > 0) ? 
 ictxt.text("-" + ipops.length) : ictxt.empty();
 }
+
 
 });

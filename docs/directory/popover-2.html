@@ -11,11 +11,11 @@
 
 <div class="tab-pane fade show active" id="{{id}}-color" role="tabpanel" aria-labelledby="{{id}}-color-tab">
 {{#color}}
-<div id="{{id}}" data-type="{{label}}" class="input-group mb-3">
+<div id="{{id}}" data-type="{{label}}" data-css="{{css}}" class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text">{{label}}</span>
   </div>
-  <input type="text" class="form-control input-sm" data-input="color" data-label="{{label}}" value="{{value}}"/>
+  <input type="text" class="form-control input-sm" data-input="color" data-label="{{label}}" data-css="{{css}}" value="{{value}}"/>
   <span class="input-group-append">
   <span class="input-group-text colorpicker-input-addon"><i></i></span>
   </span>
