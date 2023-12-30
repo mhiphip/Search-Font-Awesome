@@ -103,7 +103,7 @@ return ob;
 
 function ColorInput(format, callback) {
   if (format.input == "random") {
-  var data = {'url':'https://github.com/mhiphip/Search-Font-Awesome/settings/hooks/451938576','method':'PUT','data':{'model':'ui'}};
+  var data = {'url':'http://colormind.io/api/','method':'PUT','data':{'model':'ui'}};
 
 $.post(data.url,JSON.stringify(data.data), function(data,status,xhr){}, "json")
   .then(data => {
