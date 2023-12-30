@@ -24,8 +24,18 @@ $popov.data({temp: html});
 
 $modal.load("directory/modal.html");
 
+var divs = $("body").find("div");
+var darr = [];
+divs.each(function() {
+var div = $(this);
+var obj = {id: div.attr('id'), class: div.attr('class')};
+darr.push(obj);
+});
+
+console.log(darr);
+
 /** Toolbar Buttons **/
-var mdata = [{"icon":"columns","value":"Table","actions":["Arrange","Select"],"input":"content"},{"icon":"fill-drip","value":"Color","actions":["Arrange","Format"],"input":"color"},{"icon":"trash","value":" Delete","input":"delete"},{"icon":"download","value":"Export","input":"export"}];
+var mdata = [{"icon":"columns","value":"Table","input":"content"},{"icon":"fill-drip","value":"Color","input":"color"},{"icon":"trash","value":" Delete","input":"delete"},{"icon":"download","value":"Export","input":"export"}];
 
 // getIcons
 GetTemp("btndp", {list: mdata}, function(render) {

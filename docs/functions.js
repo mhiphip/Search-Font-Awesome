@@ -67,7 +67,6 @@ return $this.find('a[data-type="icon"]');
 /** Review Funcs **/
 function CreatePopup($icon, $el) {
 var html = $('#popover').data("temp");
-
     $el.popover({
     title: function() {
     return $(this).attr("id");
@@ -168,7 +167,8 @@ var temp = `<div class="colorpicker"><div class="colorpicker-saturation"><i clas
 </div>
 </div></div>`;
 
-$cps.colorpicker({format: data.format, container: true, template: temp}).on('colorpickerCreate',function (e) {
+$cps.colorpicker({format: data.format, container: true, template: temp}).on('colorpickerCreate',
+function (e) {
 var swatch = e.colorpicker.element.find("#swatches");
 var btn = swatch.children().first();
 swatch.empty();

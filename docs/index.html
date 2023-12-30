@@ -10,12 +10,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
 <!-- Bootstrap core CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+
 <!-- Material Design Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css" rel="stylesheet">
 
 <!-- Your custom styles (optional) -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/css/bootstrap-colorpicker.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -33,20 +34,20 @@
 
 <!--buttons-->
 <div id="btn-actions" class="btn-group order-2">
-  <button id="getReview" type="button" class="btn btn-md rgba-lime-strong disabled" aria-haspopup="true" aria-expanded="false" data-active="table-check">
+  <button id="getReview" type="button" class="btn btn-md rgba-lime-strong disabled" data-active="table-check">
   <span class="fas fa-angle-double-up fa-2x"></span>
   </button>
-  <button id="getIcons" type="button" class="btn btn-md rgba-pink-strong disabled" data-toggle="dropdown" data-active="icon-check" aria-haspopup="true" aria-expanded="false"><span class="fas fa-image fa-2x"></span>
+  <button id="getIcons" type="button" class="btn btn-md rgba-pink-strong disabled" data-toggle="dropdown" data-active="icon-check"><span class="fas fa-image fa-2x"></span>
   </button>
-    <div class="dropdown-menu" aria-labelledby="#getIcons">
+    <div class="dropdown-menu">
     </div>
 </div>
 
     <!--body-->
-  <div id="content" class="card-body order-3">
+  <div id="content" class="card-body mb-2 order-3">
   </div>
   
-  <div id="color" class="card-body order-3" hidden>
+  <div id="color" class="card-body mb-2 order-3" hidden>
 </div>
 
   <div id="export" class="card-body order-3" hidden>
@@ -74,7 +75,7 @@
 </div>
 
 <div id="popover" class="hidden">
-  <div class="popover-body"></div>
+
 </div>
 
 <div id="spinner" hidden>
