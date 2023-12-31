@@ -101,15 +101,25 @@ var ob = {};
 return ob;
 }
 
+function postRequest(url, data) {
+return fetch(url, {
+method: 'POST',
+body: JSON.stringify(data),
+})
+.then(response => response.json())
+.catch(error => console.error(error))
+}
+
 function ColorInput(format, callback) {
   if (format.input == "random") {
+  
   var data = {'url':'http://colormind.io/api/','method':'PUT','data':{'model':'ui'}};
 
-$.post(data.url,JSON.stringify(data.data), function(data,status,xhr){}, "json")
-  .then(data => {
+postRequest(data.url, data.data)
+.then(data => {
   format.values = data.result.map(value => RGBToHex(`rgb(${value})`));
   callback(format);
-  })
+  });
   }
 
   if (format.input == "default") {
