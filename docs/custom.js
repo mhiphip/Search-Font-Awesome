@@ -32,8 +32,6 @@ var obj = {id: div.attr('id'), class: div.attr('class')};
 darr.push(obj);
 });
 
-console.log(darr);
-
 /** Toolbar Buttons **/
 var mdata = [{"icon":"columns","value":"Table","input":"content"},{"icon":"fill-drip","value":"Color","input":"color"},{"icon":"trash","value":" Delete","input":"delete"},{"icon":"download","value":"Export","input":"export"}];
 
