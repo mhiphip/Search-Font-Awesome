@@ -113,7 +113,7 @@ body: JSON.stringify(data),
 function ColorInput(format, callback) {
   if (format.input == "random") {
   
-  var data = {'url':'http://colormind.io/api/','method':'PUT','data':{'model':'ui'}};
+  var data = {'url':'http://colormind.io/api/','method':'POST','data':{'model':'default'}};
 
 postRequest(data.url, data.data)
 .then(data => {
@@ -230,16 +230,6 @@ return image.src;
 }
 
 // Temp helpers
-function httpRq(data) {
-var http = new XMLHttpRequest();
-http.onreadystatechange = function() {
-   if(http.readyState == 4 && http.status == 200) {
-    data.callback(JSON.parse(http.responseText));
-}
-}
-http.open(data.method, data.url, true);
-http.send(JSON.stringify(data.data));
-}
 
 function RenderTemp(temp, data, partial) {
 var tdata = $('#template').data("table");
